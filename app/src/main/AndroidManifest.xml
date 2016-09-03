@@ -15,7 +15,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Vier_Routiert"
+        <activity android:name=".VierRoutiert"
             android:screenOrientation="landscape"/>
 
     </application>

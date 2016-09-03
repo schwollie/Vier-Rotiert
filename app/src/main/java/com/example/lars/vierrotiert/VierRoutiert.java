@@ -5,12 +5,12 @@ import android.os.Bundle;
 /**
  * Created by maus on 02.09.16.
  */
-public class Vier_Routiert extends MainActivity {
+public class VierRoutiert extends MainActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+//        setContentView(R.layout.activity_main);
     }
 
     private int[][] field = new int[][]{
