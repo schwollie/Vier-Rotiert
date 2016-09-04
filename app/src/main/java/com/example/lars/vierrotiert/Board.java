@@ -1,26 +1,9 @@
 package com.example.lars.vierrotiert;
 
-/**
- * Created by Lars on 03.09.2016.
- */
 public class Board {
 
     private final int size;
     private Field[][] field;
-
-    enum Field {
-        Empty(0, ' '),
-        Black(-1, '0'),
-        White(1, 'X');
-
-        private final int value;
-        private final char character;
-
-        Field(int value, char c) {
-            this.value = value;
-            this.character = c;
-        }
-    }
 
     Board(int size) {
         this.size = size;
@@ -33,16 +16,18 @@ public class Board {
     }
 
     private Board(Field[][] field, int size) {
-        this.size= size;
+        this.size = size;
         this.field = field;
+    }
+
+    public int getSize() {
+        return size;
     }
 
     Board set(int col, Field field) {
         Field[][] copy = new Field[size][size];
         for (int row = 0; row < size; row++) {
-            for (int column = 0; column < size; column++) {
-                copy[row][column] = this.field[row][column];
-            }
+            System.arraycopy(this.field[row], 0, copy[row], 0, size);
         }
 
         for (int row = size-1; row>=0; row--) {
@@ -96,6 +81,20 @@ public class Board {
                     newField[row][col] = Field.Empty;
                 }
             }
+        }
+    }
+
+    enum Field {
+        Empty(0, ' '),
+        Black(-1, '0'),
+        White(1, 'X');
+
+        private final int value;
+        private final char character;
+
+        Field(int value, char c) {
+            this.value = value;
+            this.character = c;
         }
     }
 }
