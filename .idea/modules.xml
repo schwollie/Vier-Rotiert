@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/Vier-Rotiert.iml" filepath="$PROJECT_DIR$/Vier-Rotiert.iml" />
       <module fileurl="file://$PROJECT_DIR$/VierRotiert.iml" filepath="$PROJECT_DIR$/VierRotiert.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>

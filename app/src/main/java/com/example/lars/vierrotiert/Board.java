@@ -84,6 +84,11 @@ public class Board {
         }
     }
 
+    public boolean isFree(int column) {
+
+        return field[0][column] == Field.Empty;
+    }
+
     enum Field {
         Empty(0, ' '),
         Black(-1, '0'),
