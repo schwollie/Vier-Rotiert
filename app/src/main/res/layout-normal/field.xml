@@ -4,6 +4,7 @@
     android:orientation="vertical">
 
     <RelativeLayout
+        android:id="@+id/links"
         android:layout_width="match_parent"
         android:layout_height="135dp"
         android:layout_gravity="center_vertical"
@@ -23,6 +24,7 @@
         android:id="@+id/field"
         android:layout_width="match_parent"
         android:layout_height="300dp"
+        android:layout_weight="1"
         android:columnCount="5"
         android:rowCount="5">
 
@@ -99,6 +101,7 @@
     </GridLayout>
 
     <RelativeLayout
+        android:id="@+id/rechts"
         android:layout_width="match_parent"
         android:layout_height="135dp">
 
