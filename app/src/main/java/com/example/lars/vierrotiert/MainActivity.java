@@ -1,9 +1,12 @@
 package com.example.lars.vierrotiert;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Display;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.GridLayout;
@@ -45,6 +48,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     void setSize() {
         GridLayout gridLayout = (GridLayout) findViewById(R.id.field);
 
+        Display d = ((WindowManager) getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+        int width = d.getWidth();
+        int height = d.getHeight();
+
+        int min = (int) (Math.min(width, height) * 0.6);
+        gridLayout.getLayoutParams().width = min;
+        gridLayout.getLayoutParams().height = min;
+
         gridLayout.setColumnCount(size);
         gridLayout.setRowCount(size);
         gridLayout.removeAllViews();
@@ -55,11 +66,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             for (int col = 0; col < size; col++) {
                 View childView = new ImageView(this);
 
+
                 GridLayout.Spec rowspan = GridLayout.spec(row, 1, 1);
                 GridLayout.Spec colspan = GridLayout.spec(col, 1, 1);
                 GridLayout.LayoutParams gridLayoutParam = new GridLayout.LayoutParams(rowspan, colspan);
                 gridLayoutParam.setMargins(8, 8, 8, 8);
-
                 gridLayout.addView(childView, gridLayoutParam);
             }
         }
@@ -117,20 +128,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             GridLayout gridLayout = (GridLayout) findViewById(R.id.field);
 
 
+
             Animation a = AnimationUtils.loadAnimation(this, R.anim.rotate_right);
             Animation b = AnimationUtils.loadAnimation(this, R.anim.rotate_right_90);
+            Animation c = AnimationUtils.loadAnimation(this, R.anim.smaller);
 
 
             ImageButton btn2 = (ImageButton) findViewById(R.id.rotate_right);
+
             a.setAnimationListener(new SimpleAnimationListener() {
                 @Override
                 public void onAnimationEnd(Animation animation) {
 
-                    board = board.rotateLeft();
+
+                    board = board.rotateRight();
                     showBoard();
 
                 }
             });
+            btn2.setAnimation(c);
             btn2.startAnimation(a);
             gridLayout.startAnimation(b);
 

@@ -2,60 +2,73 @@
     android:id="@+id/LinearLayout01"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:paddingLeft="10dp"
-    android:paddingRight="10dp">
+    android:orientation="vertical">
 
-    <GridLayout
-        android:id="@+id/field"
+    <FrameLayout
+        android:id="@+id/FrameLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"></FrameLayout>
+
+    <com.example.lars.vierrotiert.SquareLinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:columnCount="2"
-        android:padding="24dp"
-        android:rowCount="2">
 
-        <ImageView
-            android:layout_column="0"
-            android:layout_columnSpan="1"
-            android:layout_columnWeight="1"
-            android:layout_margin="8dp"
-            android:layout_row="0"
-            android:layout_rowSpan="1"
-            android:layout_rowWeight="1"
-            android:src="@drawable/ic_circle_black_24dp" />
+        android:gravity="center"
+        android:padding="24dp">
 
-        <ImageView
-            android:layout_column="1"
-            android:layout_columnSpan="1"
-            android:layout_columnWeight="1"
-            android:layout_margin="8dp"
-            android:layout_row="0"
-            android:layout_rowSpan="1"
-            android:layout_rowWeight="1"
-            android:src="@drawable/ic_circle_black_24dp" />
+        <GridLayout
+            android:id="@+id/field"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:columnCount="2"
+            android:padding="24dp"
+            android:rowCount="2">
 
-        <ImageView
-            android:layout_column="0"
-            android:layout_columnSpan="1"
-            android:layout_columnWeight="1"
-            android:layout_margin="8dp"
-            android:layout_row="1"
-            android:layout_rowSpan="1"
-            android:layout_rowWeight="1"
-            android:src="@drawable/ic_circle_black_24dp" />
+            <ImageView
+                android:layout_column="0"
+                android:layout_columnSpan="1"
+                android:layout_columnWeight="1"
+                android:layout_margin="8dp"
+                android:layout_row="0"
+                android:layout_rowSpan="1"
+                android:layout_rowWeight="1"
+                android:src="@drawable/ic_circle_black_24dp" />
 
-        <ImageView
-            android:layout_column="1"
-            android:layout_columnSpan="1"
-            android:layout_columnWeight="1"
-            android:layout_margin="8dp"
-            android:layout_row="1"
-            android:layout_rowSpan="1"
-            android:layout_rowWeight="1"
-            android:src="@drawable/ic_circle_black_24dp" />
+            <ImageView
+                android:layout_column="1"
+                android:layout_columnSpan="1"
+                android:layout_columnWeight="1"
+                android:layout_margin="8dp"
+                android:layout_row="0"
+                android:layout_rowSpan="1"
+                android:layout_rowWeight="1"
+                android:src="@drawable/ic_circle_black_24dp" />
 
-    </GridLayout>
+            <ImageView
+                android:layout_column="0"
+                android:layout_columnSpan="1"
+                android:layout_columnWeight="1"
+                android:layout_margin="8dp"
+                android:layout_row="1"
+                android:layout_rowSpan="1"
+                android:layout_rowWeight="1"
+                android:src="@drawable/ic_circle_black_24dp" />
+
+            <ImageView
+                android:layout_column="1"
+                android:layout_columnSpan="1"
+                android:layout_columnWeight="1"
+                android:layout_margin="8dp"
+                android:layout_row="1"
+                android:layout_rowSpan="1"
+                android:layout_rowWeight="1"
+                android:src="@drawable/ic_circle_black_24dp" />
+
+        </GridLayout>
+
+    </com.example.lars.vierrotiert.SquareLinearLayout>
 
     <GridLayout
         android:id="@+id/rechts"
@@ -75,6 +88,7 @@
                 android:layout_alignParentStart="true"
                 android:layout_centerVertical="true"
                 android:background="@drawable/ic_left_black_24dp"
+                android:paddingRight="10dp"
                 android:text="Links" />
         </LinearLayout>
 
@@ -85,14 +99,14 @@
 
             <ImageButton
                 android:id="@+id/rotate_right"
-            style="?android:attr/buttonStyleSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_alignTop="@+id/button3"
                 android:layout_columnWeight="1"
                 android:background="@drawable/ic_right_black_24dp"
-            android:text="Rechts" />
+                android:text="Rechts" />
         </LinearLayout>
 
     </GridLayout>
