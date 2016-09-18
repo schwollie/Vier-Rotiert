@@ -1,10 +1,13 @@
 package com.example.lars.vierrotiert;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Board {
 
     private final int size;
     private Field[][] field;
-
+    private List<FieldListener> fieldListeners = new ArrayList<>();
     Board(int size) {
         this.size = size;
         this.field = new Field[size][size];
@@ -15,36 +18,207 @@ public class Board {
         }
     }
 
-    private Board(Field[][] field, int size) {
-        this.size = size;
-        this.field = field;
+    public void addFieldLietener(FieldListener listener) {
+        fieldListeners.add(listener);
     }
 
     public int getSize() {
         return size;
     }
 
-    Board set(int col, Field field) {
-        Field[][] copy = new Field[size][size];
-        for (int row = 0; row < size; row++) {
-            System.arraycopy(this.field[row], 0, copy[row], 0, size);
-        }
+    void set(int col, Field field) {
 
-        for (int row = size-1; row>=0; row--) {
-            if (copy[row][col] == Field.Empty) {
-                copy[row][col] = field;
-                return new Board(copy, size);
+        for (int row = size - 1; row >= 0; row--) {
+            if (this.field[row][col] == Field.Empty) {
+                this.field[row][col] = field;
+                notifyFieldListenersOnStart();
+                notifyFieldListenersOnDrop(col, 0, row);
+                notifyFieldListenersOnEnd();
+                return;
             }
         }
 
         throw new IllegalArgumentException(String.format("Column %d completely full", col));
     }
 
+    Field isWinner() {
+        for (int col = 0; col < size; col++) {
+            int white = 0;
+            int black = 0;
+            for (int row = 0; row < size; row++) {
+                if (field[col][row] == Field.White) {
+                    white++;
+                    black = 0;
+                } else if (field[col][row] == Field.Black) {
+                    black++;
+                    white = 0;
+                } else if (field[col][row] == Field.Empty) {
+                    white = 0;
+                    black = 0;
+                }
+
+                if (white == 4) {
+                    return Field.White;
+                } else if (black == 4) {
+                    return Field.Black;
+                }
+            }
+        }
+
+
+        //Next
+
+
+        for (int col = 0; col < size; col++) {
+            int white = 0;
+            int black = 0;
+            for (int row = 0; row < size; row++) {
+                if (field[row][col] == Field.White) {
+                    white++;
+                    black = 0;
+                } else if (field[row][col] == Field.Black) {
+                    black++;
+                    white = 0;
+                } else if (field[row][col] == Field.Empty) {
+                    white = 0;
+                    black = 0;
+                }
+
+                if (white == 4) {
+                    return Field.White;
+
+                } else if (black == 4) {
+                    return Field.Black;
+
+                }
+            }
+        }
+
+
+        //Diagonal links nach rechts
+
+    /*int white = 0;
+    int black = 0;
+
+    for(int startPositionCol = 0; startPositionCol < size;startPositionCol++) {
+        for(int startPositionRow = 0; startPositionRow < size;startPositionRow++) {
+            if(field[startPositionCol][startPositionRow]==Field.White) {
+                //Todo  Papa fragen white++;
+
+                for(int i = 0;startPositionCol+i < size||startPositionRow+i < size;i++) {
+                    if(field[startPositionCol-i][startPositionRow+i]==Field.White) {
+                        white++;
+
+                        if(white==4) {
+                            return Field.White;
+                        }
+
+
+                    } else {
+                        white = 0;
+                    }
+                }
+
+
+            } else if(field[startPositionCol][startPositionRow]==Field.Black) {
+
+                for(int i = 0;startPositionCol+i < size||startPositionRow+i < size;i++) {
+                    if(field[startPositionCol-i][startPositionRow+i]==Field.Black) {
+                        //Todo  Papa fragen black++;
+
+                        if(black==4) {
+                            return Field.Black;
+                        }
+
+
+                    } else {
+                        black = 0;
+                    }
+                }
+
+
+            } else if(field[startPositionCol][startPositionRow]==Field.Empty) {
+                black = 0;
+                white = 0;
+            }
+
+
+
+
+
+
+
+        }
+
+    }
+
+    //Diagonale rechts nach links
+
+
+
+    for(int startPositionCol = 0; startPositionCol < size;startPositionCol++) {
+        for(int startPositionRow = 0; startPositionRow < size;startPositionRow++) {
+            if(field[startPositionCol][startPositionRow]==Field.White) {
+                //Todo  Papa fragen white++;
+
+                for(int i = size;startPositionCol-i == 0||startPositionRow+i == 0;i--) {
+                    if(field[startPositionCol-i][startPositionRow+i]==Field.White) {
+                        white++;
+
+                        if(white==5) {
+                            return Field.White;
+                        }
+
+
+                    } else {
+                        white = 0;
+                    }
+                }
+
+
+            } else if(field[startPositionCol][startPositionRow]==Field.Black) {
+
+                for(int i = 0;startPositionCol-i < size||startPositionRow+i < size;i++) {
+                    if(field[startPositionCol-i][startPositionRow+i]==Field.Black) {
+                        //Todo  Papa fragen black++;
+
+                        if(black==4) {
+                            return Field.Black;
+                        }
+
+
+                    } else {
+                        black = 0;
+                    }
+                }
+
+
+            } else if(field[startPositionCol][startPositionRow]==Field.Empty) {
+                black = 0;
+                white = 0;
+            }
+
+
+
+
+
+
+
+        }
+
+    }
+*/
+
+        return Field.Empty;
+
+
+    }
+
     Field get(int row, int col) {
         return field[row][col];
     }
 
-    Board rotateLeft() {
+    void rotateLeft() {
         Field[][] newField = new Field[size][size];
         for (int row = 0; row < size; row++) {
             for (int col = 0; col < size; col++) {
@@ -52,12 +226,10 @@ public class Board {
             }
         }
 
-        applyGravity(newField);
-
-        return new Board(newField, size);
+        field = newField;
     }
 
-    Board rotateRight() {
+    void rotateRight() {
         Field[][] newField = new Field[size][size];
         for (int row = 0; row < size; row++) {
             for (int col = 0; col < size; col++) {
@@ -65,28 +237,55 @@ public class Board {
             }
         }
 
-        applyGravity(newField);
-
-        return new Board(newField, size);
+        field = newField;
     }
 
-    private void applyGravity(Field[][] newField) {
+    void applyGravity() {
+        Field[][] newField = new Field[size][size];
+
+        notifyFieldListenersOnStart();
+
         for (int col = 0; col < size; col++) {
             int offset = 0;
             for (int row = size - 1; row >= 0; row--) {
-                if (newField[row][col] == Field.Empty) {
+                if (field[row][col] == Field.Empty) {
+                    newField[row][col] = Field.Empty;
                     offset++;
                 } else if (offset > 0) {
-                    newField[row + offset][col] = newField[row][col];
+                    newField[row + offset][col] = field[row][col];
                     newField[row][col] = Field.Empty;
+
+                    notifyFieldListenersOnDrop(col, row, row + offset);
                 }
             }
         }
+
+        notifyFieldListenersOnEnd();
+
+        field = newField;
     }
 
     public boolean isFree(int column) {
 
         return field[0][column] == Field.Empty;
+    }
+
+    private void notifyFieldListenersOnStart() {
+        for (FieldListener listener : fieldListeners) {
+            listener.onStartDrop();
+        }
+    }
+
+    private void notifyFieldListenersOnDrop(int column, int startRow, int endRow) {
+        for (FieldListener listener : fieldListeners) {
+            listener.onDrop(column, startRow, endRow);
+        }
+    }
+
+    private void notifyFieldListenersOnEnd() {
+        for (FieldListener listener : fieldListeners) {
+            listener.onEndDrop();
+        }
     }
 
     enum Field {
@@ -101,5 +300,13 @@ public class Board {
             this.value = value;
             this.character = c;
         }
+    }
+
+    interface FieldListener {
+        void onStartDrop();
+
+        void onDrop(int col, int startRow, int endRow);
+
+        void onEndDrop();
     }
 }

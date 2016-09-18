@@ -2,7 +2,7 @@ package com.example.lars.vierrotiert;
 
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Created by Lars on 03.09.2016.
@@ -39,5 +39,14 @@ public class BoardTest {
         assertEquals(testBoard.get(4, 1), Board.Field.White);
         assertEquals(testBoard.get(3, 0), Board.Field.White);
         assertEquals(testBoard.get(2, 0), Board.Field.Black);
+    }
+
+    @Test public void testIsWinner1() throws Exception { Board testBoard = new Board(5);
+        testBoard = testBoard.set(0, Board.Field.Black);
+        testBoard = testBoard.set(0, Board.Field.Black);
+        testBoard = testBoard.set(0, Board.Field.Black);
+        testBoard = testBoard.set(0, Board.Field.Black);
+
+        assertEquals(testBoard.isWinner(), Board.Field.Black);
     }
 }
