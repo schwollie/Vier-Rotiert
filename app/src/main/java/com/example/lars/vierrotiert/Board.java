@@ -57,9 +57,9 @@ public class Board {
                     black = 0;
                 }
 
-                if (white == 4) {
+                if (white >= 4) {
                     return Field.White;
-                } else if (black == 4) {
+                } else if (black >= 4) {
                     return Field.Black;
                 }
             }
@@ -84,10 +84,10 @@ public class Board {
                     black = 0;
                 }
 
-                if (white == 4) {
+                if (white >= 4) {
                     return Field.White;
 
-                } else if (black == 4) {
+                } else if (black >= 4) {
                     return Field.Black;
 
                 }
@@ -95,119 +95,46 @@ public class Board {
         }
 
 
-        //Diagonal links nach rechts
+        //Diagonale
+        int white = 0;
+        int black = 0;
 
-    /*int white = 0;
-    int black = 0;
-
-    for(int startPositionCol = 0; startPositionCol < size;startPositionCol++) {
-        for(int startPositionRow = 0; startPositionRow < size;startPositionRow++) {
-            if(field[startPositionCol][startPositionRow]==Field.White) {
-                //Todo  Papa fragen white++;
-
-                for(int i = 0;startPositionCol+i < size||startPositionRow+i < size;i++) {
-                    if(field[startPositionCol-i][startPositionRow+i]==Field.White) {
-                        white++;
-
-                        if(white==4) {
-                            return Field.White;
-                        }
-
-
-                    } else {
-                        white = 0;
-                    }
-                }
-
-
-            } else if(field[startPositionCol][startPositionRow]==Field.Black) {
-
-                for(int i = 0;startPositionCol+i < size||startPositionRow+i < size;i++) {
-                    if(field[startPositionCol-i][startPositionRow+i]==Field.Black) {
-                        //Todo  Papa fragen black++;
-
-                        if(black==4) {
-                            return Field.Black;
-                        }
-
-
-                    } else {
-                        black = 0;
-                    }
-                }
-
-
-            } else if(field[startPositionCol][startPositionRow]==Field.Empty) {
+        for(int  col = size;col > 0;col--) {
+            if(field[col][size]==Field.White) {
+                white++;
+                black = 0;
+            }  else if(field[col][size]==Field.Black) {
+                black++;
+                white = 0;
+            } else  {
                 black = 0;
                 white = 0;
             }
 
 
 
-
-
-
-
-        }
-
-    }
-
-    //Diagonale rechts nach links
-
-
-
-    for(int startPositionCol = 0; startPositionCol < size;startPositionCol++) {
-        for(int startPositionRow = 0; startPositionRow < size;startPositionRow++) {
-            if(field[startPositionCol][startPositionRow]==Field.White) {
-                //Todo  Papa fragen white++;
-
-                for(int i = size;startPositionCol-i == 0||startPositionRow+i == 0;i--) {
-                    if(field[startPositionCol-i][startPositionRow+i]==Field.White) {
-                        white++;
-
-                        if(white==5) {
-                            return Field.White;
-                        }
-
-
-                    } else {
-                        white = 0;
-                    }
+            for(int i = 0;i < size;i++) {
+                if(field[col+i][size-i]==Field.White) {
+                    white++;
+                    black = 0;
+                } else if(field[col+i][size-i]==Field.Black) {
+                    black++;
+                    white = 0;
+                } else {
+                    black = 0;
+                    white = 0;
                 }
-
-
-            } else if(field[startPositionCol][startPositionRow]==Field.Black) {
-
-                for(int i = 0;startPositionCol-i < size||startPositionRow+i < size;i++) {
-                    if(field[startPositionCol-i][startPositionRow+i]==Field.Black) {
-                        //Todo  Papa fragen black++;
-
-                        if(black==4) {
-                            return Field.Black;
-                        }
-
-
-                    } else {
-                        black = 0;
-                    }
-                }
-
-
-            } else if(field[startPositionCol][startPositionRow]==Field.Empty) {
-                black = 0;
-                white = 0;
             }
 
 
-
-
-
+            if(white>=4) {
+                return Field.White;
+            } else if(black>=4) {
+                return  Field.Black;
+            }
 
 
         }
-
-    }
-*/
 
         return Field.Empty;
 
