@@ -8,6 +8,12 @@ public class Board {
     private final int size;
     private Field[][] field;
     private List<FieldListener> fieldListeners = new ArrayList<>();
+
+    private Board(Field[][] field, int size) {
+        this.field = field;
+        this.size = size;
+    }
+
     Board(int size) {
         this.size = size;
         this.field = new Field[size][size];
@@ -16,6 +22,41 @@ public class Board {
                 field[row][col] = Field.Empty;
             }
         }
+    }
+
+    static Board fromCharacters(String[] map) {
+        int size = map.length;
+        if (size == 0) {
+            throw new IllegalArgumentException("map must contain at least one row");
+        }
+
+        Field[][] field = new Field[size][size];
+        int row = 0;
+        for (String line : map) {
+            if (line.length() != size) {
+                throw new IllegalArgumentException("each row must have " + size + " entries");
+            }
+            int col = 0;
+            for (char c : line.toCharArray()) {
+                switch (c) {
+                    case 'X':
+                        field[row][col] = Field.Black;
+                        break;
+                    case 'O':
+                        field[row][col] = Field.White;
+                        break;
+                    case '-':
+                        field[row][col] = Field.Empty;
+                        break;
+                    default:
+                        throw new IllegalArgumentException("Invalid character at " + row + "/" + col);
+                }
+                col++;
+            }
+            row++;
+        }
+
+        return new Board(field, size);
     }
 
     public void addFieldLietener(FieldListener listener) {
@@ -32,7 +73,7 @@ public class Board {
             if (this.field[row][col] == Field.Empty) {
                 this.field[row][col] = field;
                 notifyFieldListenersOnStart();
-                notifyFieldListenersOnDrop(col, 0, row);
+                notifyFieldListenersOnDrop(col, 0, row, field);
                 notifyFieldListenersOnEnd();
                 return;
             }
@@ -42,103 +83,82 @@ public class Board {
     }
 
     Field isWinner() {
-        for (int col = 0; col < size; col++) {
-            int white = 0;
-            int black = 0;
-            for (int row = 0; row < size; row++) {
-                if (field[col][row] == Field.White) {
-                    white++;
-                    black = 0;
-                } else if (field[col][row] == Field.Black) {
-                    black++;
-                    white = 0;
-                } else if (field[col][row] == Field.Empty) {
-                    white = 0;
-                    black = 0;
-                }
-
-                if (white >= 4) {
-                    return Field.White;
-                } else if (black >= 4) {
-                    return Field.Black;
+        Accumulator acc = new Accumulator();
+        for (int row = 0; row < size; row++) {
+            acc.reset();
+            for (int col = 0; col < size; col++) {
+                acc.addField(field[row][col]);
+                if (acc.hasWinner()) {
+                    return acc.getWinner();
                 }
             }
         }
-
 
         //Next
-
-
         for (int col = 0; col < size; col++) {
-            int white = 0;
-            int black = 0;
+            acc.reset();
             for (int row = 0; row < size; row++) {
-                if (field[row][col] == Field.White) {
-                    white++;
-                    black = 0;
-                } else if (field[row][col] == Field.Black) {
-                    black++;
-                    white = 0;
-                } else if (field[row][col] == Field.Empty) {
-                    white = 0;
-                    black = 0;
-                }
-
-                if (white >= 4) {
-                    return Field.White;
-
-                } else if (black >= 4) {
-                    return Field.Black;
-
+                acc.addField(field[row][col]);
+                if (acc.hasWinner()) {
+                    return acc.getWinner();
                 }
             }
         }
 
+// 0,0  0,1  0,2  0,3  0,4
+// 1,0  1,1  1,2  1,3  1,4
+// 2,0  2,1  2,2  2,3  2,4
+// 3,0  3,1  3,2  3,3  3,4
+// 4,0  4,1  4,2  4,3  4,4
 
-        //Diagonale
-        int white = 0;
-        int black = 0;
+        // Fall 1: Spalten von oben nach unten links
+        for (int col = 0; col < size; col++) {
+            acc.reset();
 
-        for(int  col = size;col > 0;col--) {
-            if(field[col][size]==Field.White) {
-                white++;
-                black = 0;
-            }  else if(field[col][size]==Field.Black) {
-                black++;
-                white = 0;
-            } else  {
-                black = 0;
-                white = 0;
-            }
-
-
-
-            for(int i = 0;i < size;i++) {
-                if(field[col+i][size-i]==Field.White) {
-                    white++;
-                    black = 0;
-                } else if(field[col+i][size-i]==Field.Black) {
-                    black++;
-                    white = 0;
-                } else {
-                    black = 0;
-                    white = 0;
+            for (int i = 0; i <= col; i++) {
+                acc.addField(field[i][col - i]);
+                if (acc.hasWinner()) {
+                    return acc.getWinner();
                 }
             }
-
-
-            if(white>=4) {
-                return Field.White;
-            } else if(black>=4) {
-                return  Field.Black;
-            }
-
-
         }
+        // Fall 2: Spalten von unten nach oben rechts
+        for (int col = size - 1; col >= 0; col--) {
+            acc.reset();
+
+            for (int i = 0; i < size - col; i++) {
+                acc.addField(field[size - i - 1][col + i]);
+                if (acc.hasWinner()) {
+                    return acc.getWinner();
+                }
+            }
+        }
+
+        // Fall 3: Spalten von oben nach unten rechts
+        for (int col = 0; col < size; col++) {
+            acc.reset();
+
+            for (int i = 0; i < size - col; i++) {
+                acc.addField(field[i][col + i]);
+                if (acc.hasWinner()) {
+                    return acc.getWinner();
+                }
+            }
+        }
+        // Fall 4: Spalten von unten nach oben links
+        for (int col = size - 1; col >= 0; col--) {
+            acc.reset();
+
+            for (int i = 0; i <= col; i++) {
+                acc.addField(field[size - i - 1][col - i]);
+                if (acc.hasWinner()) {
+                    return acc.getWinner();
+                }
+            }
+        }
+
 
         return Field.Empty;
-
-
     }
 
     Field get(int row, int col) {
@@ -182,7 +202,9 @@ public class Board {
                     newField[row + offset][col] = field[row][col];
                     newField[row][col] = Field.Empty;
 
-                    notifyFieldListenersOnDrop(col, row, row + offset);
+                    notifyFieldListenersOnDrop(col, row, row + offset, field[row][col]);
+                } else {
+                    newField[row][col] = field[row][col];
                 }
             }
         }
@@ -203,9 +225,9 @@ public class Board {
         }
     }
 
-    private void notifyFieldListenersOnDrop(int column, int startRow, int endRow) {
+    private void notifyFieldListenersOnDrop(int column, int startRow, int endRow, Field field) {
         for (FieldListener listener : fieldListeners) {
-            listener.onDrop(column, startRow, endRow);
+            listener.onDrop(column, startRow, endRow, field);
         }
     }
 
@@ -232,8 +254,41 @@ public class Board {
     interface FieldListener {
         void onStartDrop();
 
-        void onDrop(int col, int startRow, int endRow);
+        void onDrop(int col, int startRow, int endRow, Field field);
 
         void onEndDrop();
+    }
+
+    private class Accumulator {
+        int black = 0;
+        int white = 0;
+
+        void addField(Field field) {
+            if (field == Field.White) {
+                white++;
+                black = 0;
+            } else if (field == Field.Black) {
+                black++;
+                white = 0;
+            } else if (field == Field.Empty) {
+                white = 0;
+                black = 0;
+            }
+        }
+
+        void reset() {
+            black = 0;
+            white = 0;
+        }
+
+        boolean hasWinner() {
+            return black >= 4 || white >= 4;
+        }
+
+        Field getWinner() {
+            if (black >= 4) return Field.Black;
+            if (white >= 4) return Field.White;
+            return Field.Empty;
+        }
     }
 }

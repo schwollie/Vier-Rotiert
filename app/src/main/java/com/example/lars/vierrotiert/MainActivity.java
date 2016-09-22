@@ -5,16 +5,20 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.FrameLayout;
 import android.widget.GridLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +26,8 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, Board.FieldListener {
 
+    private static final String TAG = "MainActivity";
+    private final List<ImageView> tempViews = new ArrayList<>();
     private int size = 5;
     private Board board = new Board(size);
     private GridLayout gridLayout;
@@ -29,6 +35,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private ImageButton btnleft;
     private ImageButton btnright;
     private List<Animator> dropAnimations;
+    private FrameLayout animationOverlayLayout;
 
 
     @Override
@@ -36,6 +43,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.field);
 
+        //animationOverlayLayout = (FrameLayout) findViewById(R.id.animation_overlay);
         gridLayout = (GridLayout) findViewById(R.id.field);
         btnleft = (ImageButton) findViewById(R.id.rotate_left);
         btnright = (ImageButton) findViewById(R.id.rotate_right);
@@ -49,28 +57,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         ImageButton rotateLeftButton = (ImageButton) findViewById(R.id.rotate_left);
         rotateLeftButton.setOnClickListener(this);
 
-
         ImageButton rotateRightButton = (ImageButton) findViewById(R.id.rotate_right);
         rotateRightButton.setOnClickListener(this);
     }
-
-    void Animation() {
-
-        ObjectAnimator objectAnimator = new ObjectAnimator();
-
-
-        AnimatorSet set = new AnimatorSet();
-        set.playTogether(
-                ObjectAnimator.ofFloat(btnright, "scaleX", 1.0f, 2.0f)
-                        .setDuration(2000),
-                ObjectAnimator.ofFloat(btnleft, "scaleX", 1.0f, 2.0f)
-                        .setDuration(2000)
-
-
-        );
-        set.start();
-    }
-
 
     void setSize() {
         GridLayout gridLayout = (GridLayout) findViewById(R.id.field);
@@ -112,9 +101,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 childView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        Log.i(TAG, "set column " + column);
                         board.set(column, player);
-                        showBoard();
-                        switchPlayer();
                     }
                 });
             }
@@ -144,19 +132,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         for (int row = 0; row < size; row++) {
             for (int col = 0; col < size; col++, index++) {
                 ImageView imageView = getImageView(row, col);
-                switch (board.get(row, col)) {
-                    case Black:
-                        imageView.setImageDrawable(getDrawable(R.drawable.ic_circle_black_24dp));
-                        break;
-                    case White:
-                        imageView.setImageDrawable(getDrawable(R.drawable.ic_circle_white_24dp));
-                        break;
-                    case Empty:
-                        imageView.setImageDrawable(getDrawable(R.drawable.ic_empty_24dp));
-                        break;
-
-                }
+                imageView.setImageDrawable(getDrawable(board.get(row, col)));
             }
+        }
+    }
+
+    Drawable getDrawable(Board.Field field) {
+        switch (field) {
+            case Black:
+                return getDrawable(R.drawable.ic_circle_black_24dp);
+            case White:
+                return getDrawable(R.drawable.ic_circle_white_24dp);
+            case Empty:
+            default:
+                return getDrawable(R.drawable.ic_empty_24dp);
         }
     }
 
@@ -165,22 +154,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (view.getId() == R.id.rotate_left) {
             GridLayout gridLayout = (GridLayout) findViewById(R.id.field);
 
-
             Animation a = AnimationUtils.loadAnimation(this, R.anim.rotate_left);
             Animation b = AnimationUtils.loadAnimation(this, R.anim.rotate_left_90);
 
             ImageButton btn2 = (ImageButton) findViewById(R.id.rotate_left);
-            a.setAnimationListener(new SimpleAnimationListener() {
+            b.setAnimationListener(new SimpleAnimationListener() {
                 @Override
                 public void onAnimationEnd(Animation animation) {
-
+                    Log.i(TAG, "rotate left");
                     board.rotateLeft();
                     board.applyGravity();
-
-                    showBoard();
-                    board.isWinner();
-                    switchPlayer();
-
                 }
             });
             btn2.startAnimation(a);
@@ -196,43 +179,65 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             ImageButton btn2 = (ImageButton) findViewById(R.id.rotate_right);
 
-            a.setAnimationListener(new SimpleAnimationListener() {
+            b.setAnimationListener(new SimpleAnimationListener() {
                 @Override
                 public void onAnimationEnd(Animation animation) {
-
+                    Log.i(TAG, "rotate right");
                     board.rotateRight();
                     board.applyGravity();
-
-
-                    showBoard();
-                    board.isWinner();
-                    switchPlayer();
-
                 }
             });
             btn2.startAnimation(a);
             gridLayout.startAnimation(b);
-
         }
-
-
     }
 
     @Override
     public void onStartDrop() {
+        Log.i(TAG, "onStartDrop: ");
         dropAnimations = new ArrayList<>();
     }
 
     @Override
-    public void onDrop(int col, int startRow, int endRow) {
+    public void onDrop(int col, int startRow, int endRow, Board.Field field) {
+        Log.i(TAG, "onDrop: " + col + ", " + startRow + ", " + endRow);
         ImageView startView = getImageView(startRow, col);
+
+        ImageView animatedView = new ImageView(this);
+        animatedView.setImageDrawable(getDrawable(field));
+        startView.setImageDrawable(getDrawable(Board.Field.Empty));
+        gridLayout.addView(animatedView, startView.getLayoutParams());
+        //animationOverlayLayout.addView(animatedView, new FrameLayout.LayoutParams(startView.getWidth(), startView.getHeight()));
+        tempViews.add(animatedView);
+
         ImageView destView = getImageView(endRow, col);
-        dropAnimations.add(ObjectAnimator.ofFloat(startView, "y", startView.getY(), destView.getY()).setDuration(1000));
+        dropAnimations.add(ObjectAnimator.ofFloat(animatedView, "y", startView.getY(), destView.getY()).setDuration(1000));
     }
 
     @Override
     public void onEndDrop() {
+        Log.i(TAG, "onEndDrop: ");
         AnimatorSet animatorSet = new AnimatorSet();
+        animatorSet.addListener(new SimpleAnimatorListener() {
+            @Override
+            public void onAnimationEnd(Animator animator) {
+                Log.i(TAG, "onAnimationEnd: ");
+
+                for (ImageView view : tempViews) {
+                    gridLayout.removeView(view);
+                }
+                tempViews.clear();
+
+                showBoard();
+
+                Board.Field winner = board.isWinner();
+                if (winner != Board.Field.Empty) {
+                    Toast.makeText(MainActivity.this, "The winner is " + winner.name(), Toast.LENGTH_SHORT).show();
+                } else {
+                    switchPlayer();
+                }
+            }
+        });
         animatorSet.playTogether(dropAnimations);
         animatorSet.start();
     }

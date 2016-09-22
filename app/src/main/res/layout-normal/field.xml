@@ -4,26 +4,19 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <FrameLayout
-        android:id="@+id/FrameLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"></FrameLayout>
-
     <com.example.lars.vierrotiert.SquareLinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-
         android:gravity="center"
         android:padding="24dp">
 
         <GridLayout
             android:id="@+id/field"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_margin="24dp"
             android:columnCount="2"
-            android:padding="24dp"
             android:rowCount="2">
 
             <ImageView
@@ -35,6 +28,7 @@
                 android:layout_rowSpan="1"
                 android:layout_rowWeight="1"
                 android:src="@drawable/ic_circle_black_24dp" />
+
 
             <ImageView
                 android:layout_column="1"

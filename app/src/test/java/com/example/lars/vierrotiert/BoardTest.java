@@ -14,10 +14,11 @@ public class BoardTest {
         Board testBoard = new Board(5);
         testBoard.set(0, Board.Field.Black);
         testBoard.set(1, Board.Field.White);
-       testBoard.set(2, Board.Field.Black);
+        testBoard.set(2, Board.Field.Black);
         testBoard.set(2, Board.Field.White);
 
         testBoard.rotateLeft();
+        testBoard.applyGravity();
 
         assertEquals(testBoard.get(4, 3), Board.Field.White);
         assertEquals(testBoard.get(4, 4), Board.Field.Black);
@@ -28,12 +29,13 @@ public class BoardTest {
     @Test
     public void testRotateRight() throws Exception {
         Board testBoard = new Board(5);
-         testBoard.set(0, Board.Field.Black);
-       testBoard.set(1, Board.Field.White);
-         testBoard.set(2, Board.Field.Black);
+        testBoard.set(0, Board.Field.Black);
+        testBoard.set(1, Board.Field.White);
+        testBoard.set(2, Board.Field.Black);
         testBoard.set(2, Board.Field.White);
 
-         testBoard.rotateRight();
+        testBoard.rotateRight();
+        testBoard.applyGravity();
 
         assertEquals(testBoard.get(4, 0), Board.Field.Black);
         assertEquals(testBoard.get(4, 1), Board.Field.White);
@@ -41,24 +43,91 @@ public class BoardTest {
         assertEquals(testBoard.get(2, 0), Board.Field.Black);
     }
 
-    @Test public void testIsWinner1() throws Exception {
-        Board testBoard = new Board(5);
-        testBoard.set(0, Board.Field.Black);
-        testBoard.set(1, Board.Field.White);
-        testBoard.set(2, Board.Field.White);
-        testBoard.set(3, Board.Field.White);
-
-
-        testBoard.set(1, Board.Field.Black);
-        testBoard.set(2, Board.Field.White);
-        testBoard.set(3, Board.Field.White);
-
-
-        testBoard.set(2, Board.Field.Black);
-        testBoard.set(3, Board.Field.White);
-
-        testBoard.set(3, Board.Field.Black);
+    @Test
+    public void testIsWinner1() throws Exception {
+        Board testBoard = Board.fromCharacters(new String[]{
+                "-----",
+                "--OX-",
+                "-OXOO",
+                "-XOXO",
+                "XOXOX",
+        });
 
         assertEquals(testBoard.isWinner(), Board.Field.Black);
+    }
+
+    @Test
+    public void testIsWinnerDiagonalCase3() throws Exception {
+        Board testBoard = Board.fromCharacters(new String[]{
+                "-O---",
+                "--O--",
+                "---O-",
+                "----O",
+                "-----",
+        });
+
+        assertEquals(testBoard.isWinner(), Board.Field.White);
+    }
+
+    @Test
+    public void testIsWinnerDiagonalCase2() throws Exception {
+        Board testBoard = Board.fromCharacters(new String[]{
+                "-----",
+                "----O",
+                "---O-",
+                "--O--",
+                "-O---",
+        });
+
+        assertEquals(testBoard.isWinner(), Board.Field.White);
+    }
+
+    @Test
+    public void testIsWinnerDiagonalCase4() throws Exception {
+        Board testBoard = Board.fromCharacters(new String[]{
+                "-----",
+                "O----",
+                "-O---",
+                "--O--",
+                "---O-",
+        });
+
+        assertEquals(testBoard.isWinner(), Board.Field.White);
+    }
+
+    @Test
+    public void testIsWinnerDiagonalCase1() throws Exception {
+        Board testBoard = Board.fromCharacters(new String[]{
+                "---O-",
+                "--O--",
+                "-O---",
+                "O----",
+                "-----",
+        });
+
+        assertEquals(testBoard.isWinner(), Board.Field.White);
+    }
+
+    @Test
+    public void testIsWinnerRowCheck() throws Exception {
+        Board testBoard = Board.fromCharacters(new String[]{
+                "-----",
+                "-----",
+                "-----",
+                "-----",
+                "OOOO-",
+        });
+
+        assertEquals(testBoard.isWinner(), Board.Field.White);
+
+        testBoard = Board.fromCharacters(new String[]{
+                "-OOOO",
+                "-----",
+                "-----",
+                "-----",
+                "-----",
+        });
+
+        assertEquals(testBoard.isWinner(), Board.Field.White);
     }
 }
