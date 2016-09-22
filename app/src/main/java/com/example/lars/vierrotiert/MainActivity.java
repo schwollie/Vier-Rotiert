@@ -163,6 +163,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 public void onAnimationEnd(Animation animation) {
                     Log.i(TAG, "rotate left");
                     board.rotateLeft();
+                    showBoard();
                     board.applyGravity();
                 }
             });
@@ -184,6 +185,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 public void onAnimationEnd(Animation animation) {
                     Log.i(TAG, "rotate right");
                     board.rotateRight();
+                    showBoard();
                     board.applyGravity();
                 }
             });
@@ -229,17 +231,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 tempViews.clear();
 
                 showBoard();
-
-                Board.Field winner = board.isWinner();
-                if (winner != Board.Field.Empty) {
-                    Toast.makeText(MainActivity.this, "The winner is " + winner.name(), Toast.LENGTH_SHORT).show();
-                } else {
-                    switchPlayer();
-                }
+                nextTurn();
             }
         });
         animatorSet.playTogether(dropAnimations);
         animatorSet.start();
+    }
+
+    private void nextTurn() {
+        Board.Field winner = board.isWinner();
+        if (winner != Board.Field.Empty) {
+            Toast.makeText(MainActivity.this, "The winner is " + winner.name(), Toast.LENGTH_SHORT).show();
+        } else {
+            switchPlayer();
+        }
     }
 }
 
