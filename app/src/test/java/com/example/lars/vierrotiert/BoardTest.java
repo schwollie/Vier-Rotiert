@@ -12,35 +12,35 @@ public class BoardTest {
     @Test
     public void testRotateLeft() throws Exception {
         Board testBoard = new Board(5);
-        testBoard.set(0, Board.Field.Black);
-        testBoard.set(1, Board.Field.White);
-        testBoard.set(2, Board.Field.Black);
-        testBoard.set(2, Board.Field.White);
+        testBoard.set(0, Board.Field.Red);
+        testBoard.set(1, Board.Field.Yellow);
+        testBoard.set(2, Board.Field.Red);
+        testBoard.set(2, Board.Field.Yellow);
 
         testBoard.rotateLeft();
         testBoard.applyGravity();
 
-        assertEquals(testBoard.get(4, 3), Board.Field.White);
-        assertEquals(testBoard.get(4, 4), Board.Field.Black);
-        assertEquals(testBoard.get(3, 4), Board.Field.White);
-        assertEquals(testBoard.get(2, 4), Board.Field.Black);
+        assertEquals(testBoard.get(4, 3), Board.Field.Yellow);
+        assertEquals(testBoard.get(4, 4), Board.Field.Red);
+        assertEquals(testBoard.get(3, 4), Board.Field.Yellow);
+        assertEquals(testBoard.get(2, 4), Board.Field.Red);
     }
 
     @Test
     public void testRotateRight() throws Exception {
         Board testBoard = new Board(5);
-        testBoard.set(0, Board.Field.Black);
-        testBoard.set(1, Board.Field.White);
-        testBoard.set(2, Board.Field.Black);
-        testBoard.set(2, Board.Field.White);
+        testBoard.set(0, Board.Field.Red);
+        testBoard.set(1, Board.Field.Yellow);
+        testBoard.set(2, Board.Field.Red);
+        testBoard.set(2, Board.Field.Yellow);
 
         testBoard.rotateRight();
         testBoard.applyGravity();
 
-        assertEquals(testBoard.get(4, 0), Board.Field.Black);
-        assertEquals(testBoard.get(4, 1), Board.Field.White);
-        assertEquals(testBoard.get(3, 0), Board.Field.White);
-        assertEquals(testBoard.get(2, 0), Board.Field.Black);
+        assertEquals(testBoard.get(4, 0), Board.Field.Red);
+        assertEquals(testBoard.get(4, 1), Board.Field.Yellow);
+        assertEquals(testBoard.get(3, 0), Board.Field.Yellow);
+        assertEquals(testBoard.get(2, 0), Board.Field.Red);
     }
 
     @Test
@@ -53,7 +53,7 @@ public class BoardTest {
                 "XOXOX",
         });
 
-        assertEquals(testBoard.isWinner(), Board.Field.Black);
+        assertEquals(testBoard.isWinner(), Board.Field.Red);
     }
 
     @Test
@@ -66,7 +66,7 @@ public class BoardTest {
                 "-----",
         });
 
-        assertEquals(testBoard.isWinner(), Board.Field.White);
+        assertEquals(testBoard.isWinner(), Board.Field.Yellow);
     }
 
     @Test
@@ -79,7 +79,7 @@ public class BoardTest {
                 "-O---",
         });
 
-        assertEquals(testBoard.isWinner(), Board.Field.White);
+        assertEquals(testBoard.isWinner(), Board.Field.Yellow);
     }
 
     @Test
@@ -92,7 +92,7 @@ public class BoardTest {
                 "---O-",
         });
 
-        assertEquals(testBoard.isWinner(), Board.Field.White);
+        assertEquals(testBoard.isWinner(), Board.Field.Yellow);
     }
 
     @Test
@@ -105,7 +105,7 @@ public class BoardTest {
                 "-----",
         });
 
-        assertEquals(testBoard.isWinner(), Board.Field.White);
+        assertEquals(testBoard.isWinner(), Board.Field.Yellow);
     }
 
     @Test
@@ -118,7 +118,7 @@ public class BoardTest {
                 "OOOO-",
         });
 
-        assertEquals(testBoard.isWinner(), Board.Field.White);
+        assertEquals(testBoard.isWinner(), Board.Field.Yellow);
 
         testBoard = Board.fromCharacters(new String[]{
                 "-OOOO",
@@ -128,6 +128,21 @@ public class BoardTest {
                 "-----",
         });
 
-        assertEquals(testBoard.isWinner(), Board.Field.White);
+        assertEquals(testBoard.isWinner(), Board.Field.Yellow);
     }
+
+
+    @Test
+    public void testIsFull() throws Exception {
+        Board testBoard = Board.fromCharacters(new String[]{
+                "XXXXX",
+                "XXXXX",
+                "XXXXX",
+                "XXXXX",
+                "XXXXX",
+        });
+
+        assertEquals(testBoard.isFull(), true);
+    }
+
 }

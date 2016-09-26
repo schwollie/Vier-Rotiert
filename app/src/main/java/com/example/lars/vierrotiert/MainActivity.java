@@ -31,11 +31,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private int size = 5;
     private Board board = new Board(size);
     private GridLayout gridLayout;
-    private Board.Field player;
+    private Board.Field currentPlayer;
+    private Player player;
     private ImageButton btnleft;
     private ImageButton btnright;
     private List<Animator> dropAnimations;
     private FrameLayout animationOverlayLayout;
+    private boolean onClickAble = true;
 
 
     @Override
@@ -48,8 +50,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btnleft = (ImageButton) findViewById(R.id.rotate_left);
         btnright = (ImageButton) findViewById(R.id.rotate_right);
 
-        player = Board.Field.Black;
+        currentPlayer = Board.Field.Red;
         board.addFieldLietener(this);
+
+        player = new RandomPlayer(Board.Field.Yellow);
 
         setSize();
         showBoard();
@@ -101,8 +105,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 childView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Log.i(TAG, "set column " + column);
-                        board.set(column, player);
+                        if (onClickAble == true && board.isFree(column)) {
+                            onClickAble = false;
+                            Log.i(TAG, "set column " + column);
+                            board.set(column, currentPlayer);
+                        }
                     }
                 });
             }
@@ -110,12 +117,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void switchPlayer() {
-        switch (player) {
-            case Black:
-                player = Board.Field.White;
+        switch (currentPlayer) {
+            case Red:
+                currentPlayer = Board.Field.Yellow;
                 break;
-            case White:
-                player = Board.Field.Black;
+            case Yellow:
+                currentPlayer = Board.Field.Red;
                 break;
         }
     }
@@ -139,9 +146,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     Drawable getDrawable(Board.Field field) {
         switch (field) {
-            case Black:
+            case Red:
                 return getDrawable(R.drawable.ic_circle_black_24dp);
-            case White:
+            case Yellow:
                 return getDrawable(R.drawable.ic_circle_white_24dp);
             case Empty:
             default:
@@ -151,51 +158,55 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View view) {
-        if (view.getId() == R.id.rotate_left) {
-            GridLayout gridLayout = (GridLayout) findViewById(R.id.field);
-
-            Animation a = AnimationUtils.loadAnimation(this, R.anim.rotate_left);
-            Animation b = AnimationUtils.loadAnimation(this, R.anim.rotate_left_90);
-
-            ImageButton btn2 = (ImageButton) findViewById(R.id.rotate_left);
-            b.setAnimationListener(new SimpleAnimationListener() {
-                @Override
-                public void onAnimationEnd(Animation animation) {
-                    Log.i(TAG, "rotate left");
-                    board.rotateLeft();
-                    showBoard();
-                    board.applyGravity();
-                }
-            });
-            btn2.startAnimation(a);
-            gridLayout.startAnimation(b);
-
-        } else if (view.getId() == R.id.rotate_right) {
-            GridLayout gridLayout = (GridLayout) findViewById(R.id.field);
-
-
-            Animation a = AnimationUtils.loadAnimation(this, R.anim.rotate_right);
-            Animation b = AnimationUtils.loadAnimation(this, R.anim.rotate_right_90);
-
-
-            ImageButton btn2 = (ImageButton) findViewById(R.id.rotate_right);
-
-            b.setAnimationListener(new SimpleAnimationListener() {
-                @Override
-                public void onAnimationEnd(Animation animation) {
-                    Log.i(TAG, "rotate right");
-                    board.rotateRight();
-                    showBoard();
-                    board.applyGravity();
-                }
-            });
-            btn2.startAnimation(a);
-            gridLayout.startAnimation(b);
+        if (onClickAble == true) {
+            onClickAble = false;
+            if (view.getId() == R.id.rotate_left) {
+                board.rotateLeft();
+            } else if (view.getId() == R.id.rotate_right) {
+                board.rotateRight();
+            }
         }
     }
 
     @Override
+    public void onRotateLeft() {
+        Animation a = AnimationUtils.loadAnimation(this, R.anim.rotate_left);
+        Animation b = AnimationUtils.loadAnimation(this, R.anim.rotate_left_90);
+
+        ImageButton btn2 = (ImageButton) findViewById(R.id.rotate_left);
+        b.setAnimationListener(new SimpleAnimationListener() {
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                showBoard();
+                board.applyGravity();
+            }
+        });
+        btn2.startAnimation(a);
+        gridLayout.startAnimation(b);
+    }
+
+    @Override
+    public void onRotateRight() {
+        Animation a = AnimationUtils.loadAnimation(this, R.anim.rotate_right);
+        Animation b = AnimationUtils.loadAnimation(this, R.anim.rotate_right_90);
+
+        ImageButton btn2 = (ImageButton) findViewById(R.id.rotate_right);
+
+        b.setAnimationListener(new SimpleAnimationListener() {
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                showBoard();
+                board.applyGravity();
+            }
+        });
+        btn2.startAnimation(a);
+        gridLayout.startAnimation(b);
+
+    }
+
+    @Override
     public void onStartDrop() {
+        onClickAble = false;
         Log.i(TAG, "onStartDrop: ");
         dropAnimations = new ArrayList<>();
     }
@@ -229,6 +240,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     gridLayout.removeView(view);
                 }
                 tempViews.clear();
+                onClickAble = true;
 
                 showBoard();
                 nextTurn();
@@ -242,9 +254,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Board.Field winner = board.isWinner();
         if (winner != Board.Field.Empty) {
             Toast.makeText(MainActivity.this, "The winner is " + winner.name(), Toast.LENGTH_SHORT).show();
+            onClickAble = false;
+            return;
         } else {
             switchPlayer();
         }
+
+        if (board.isFull() == true) {
+            onClickAble = false;
+            Toast.makeText(MainActivity.this, "Every field is full!", Toast.LENGTH_SHORT).show();
+            return;
+
+        }
+
+        if (currentPlayer == player.getField()) {
+            player.set(board);
+        } else {
+            onClickAble = true;
+        }
+
+
+
     }
 }
 

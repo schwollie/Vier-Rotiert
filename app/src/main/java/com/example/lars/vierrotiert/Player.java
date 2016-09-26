@@ -7,5 +7,4 @@ public interface Player {
     void set(Board board);
 
     Board.Field getField();
-
 }

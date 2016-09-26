@@ -40,10 +40,10 @@ public class Board {
             for (char c : line.toCharArray()) {
                 switch (c) {
                     case 'X':
-                        field[row][col] = Field.Black;
+                        field[row][col] = Field.Red;
                         break;
                     case 'O':
-                        field[row][col] = Field.White;
+                        field[row][col] = Field.Yellow;
                         break;
                     case '-':
                         field[row][col] = Field.Empty;
@@ -82,6 +82,27 @@ public class Board {
         throw new IllegalArgumentException(String.format("Column %d completely full", col));
     }
 
+
+    boolean isFull() {
+
+        int full = 0;
+
+        for(int col = 0;col < size;col++) {
+            for(int row = 0;row < size;row++) {
+                if(field[col][row]!= Field.Empty) {
+                    full++;
+                    if(full==size*size) {
+                        return true;
+                    }
+
+                }
+            }
+        }
+
+
+        return false;
+    }
+
     Field isWinner() {
         Accumulator acc = new Accumulator();
         for (int row = 0; row < size; row++) {
@@ -104,12 +125,6 @@ public class Board {
                 }
             }
         }
-
-// 0,0  0,1  0,2  0,3  0,4
-// 1,0  1,1  1,2  1,3  1,4
-// 2,0  2,1  2,2  2,3  2,4
-// 3,0  3,1  3,2  3,3  3,4
-// 4,0  4,1  4,2  4,3  4,4
 
         // Fall 1: Spalten von oben nach unten links
         for (int col = 0; col < size; col++) {
@@ -166,6 +181,8 @@ public class Board {
     }
 
     void rotateLeft() {
+        notifyFieldListenersOnRotateLeft();
+
         Field[][] newField = new Field[size][size];
         for (int row = 0; row < size; row++) {
             for (int col = 0; col < size; col++) {
@@ -177,6 +194,8 @@ public class Board {
     }
 
     void rotateRight() {
+        notifyFieldListenersOnRotateRight();
+
         Field[][] newField = new Field[size][size];
         for (int row = 0; row < size; row++) {
             for (int col = 0; col < size; col++) {
@@ -219,6 +238,18 @@ public class Board {
         return field[0][column] == Field.Empty;
     }
 
+    private void notifyFieldListenersOnRotateLeft() {
+        for (FieldListener listener : fieldListeners) {
+            listener.onRotateLeft();
+        }
+    }
+
+    private void notifyFieldListenersOnRotateRight() {
+        for (FieldListener listener : fieldListeners) {
+            listener.onRotateRight();
+        }
+    }
+
     private void notifyFieldListenersOnStart() {
         for (FieldListener listener : fieldListeners) {
             listener.onStartDrop();
@@ -239,8 +270,8 @@ public class Board {
 
     enum Field {
         Empty(0, ' '),
-        Black(-1, '0'),
-        White(1, 'X');
+        Red(-1, '0'),
+        Yellow(1, 'X');
 
         private final int value;
         private final char character;
@@ -252,6 +283,10 @@ public class Board {
     }
 
     interface FieldListener {
+        void onRotateLeft();
+
+        void onRotateRight();
+
         void onStartDrop();
 
         void onDrop(int col, int startRow, int endRow, Field field);
@@ -260,34 +295,34 @@ public class Board {
     }
 
     private class Accumulator {
-        int black = 0;
-        int white = 0;
+        int red = 0;
+        int yellow = 0;
 
         void addField(Field field) {
-            if (field == Field.White) {
-                white++;
-                black = 0;
-            } else if (field == Field.Black) {
-                black++;
-                white = 0;
+            if (field == Field.Yellow) {
+                yellow++;
+                red = 0;
+            } else if (field == Field.Red) {
+                red++;
+                yellow = 0;
             } else if (field == Field.Empty) {
-                white = 0;
-                black = 0;
+                yellow = 0;
+                red = 0;
             }
         }
 
         void reset() {
-            black = 0;
-            white = 0;
+            red = 0;
+            yellow = 0;
         }
 
         boolean hasWinner() {
-            return black >= 4 || white >= 4;
+            return red >= 4 || yellow >= 4;
         }
 
         Field getWinner() {
-            if (black >= 4) return Field.Black;
-            if (white >= 4) return Field.White;
+            if (red >= 4) return Field.Red;
+            if (yellow >= 4) return Field.Yellow;
             return Field.Empty;
         }
     }
