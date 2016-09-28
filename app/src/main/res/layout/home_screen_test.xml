@@ -5,9 +5,6 @@
     android:orientation="vertical">
 
 
-    <ViewAnimator
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
 
 
     <FrameLayout
@@ -55,7 +52,7 @@
             android:background="#00ffffff">
 
             <ImageButton
-                android:id="@+id/imageButton2"
+                android:id="@+id/left_button"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_gravity="center"
@@ -69,7 +66,7 @@
             android:background="#00ffffff">
 
             <ImageButton
-                android:id="@+id/imageButton"
+                android:id="@+id/right_button"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_gravity="center"
@@ -110,12 +107,5 @@
             android:background="#00ffffff"></FrameLayout>
     </LinearLayout>
 
-    <ViewAnimator
-        android:id="@+id/viewAnimator"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_centerVertical="true"
-        android:layout_marginStart="55dp" />
 
 </RelativeLayout>

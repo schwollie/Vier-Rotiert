@@ -24,9 +24,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener, Board.FieldListener {
+public class GameActivity extends AppCompatActivity implements View.OnClickListener, Board.FieldListener {
 
-    private static final String TAG = "MainActivity";
+    private static final String TAG = "GameActivity";
     private final List<ImageView> tempViews = new ArrayList<>();
     private int size = 5;
     private Board board = new Board(size);
@@ -253,7 +253,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void nextTurn() {
         Board.Field winner = board.isWinner();
         if (winner != Board.Field.Empty) {
-            Toast.makeText(MainActivity.this, "The winner is " + winner.name(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(GameActivity.this, "The winner is " + winner.name(), Toast.LENGTH_SHORT).show();
             onClickAble = false;
             return;
         } else {
@@ -262,7 +262,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         if (board.isFull() == true) {
             onClickAble = false;
-            Toast.makeText(MainActivity.this, "Every field is full!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(GameActivity.this, "Every field is full!", Toast.LENGTH_SHORT).show();
             return;
 
         }
