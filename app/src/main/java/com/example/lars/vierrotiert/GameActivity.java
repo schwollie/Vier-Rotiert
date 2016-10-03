@@ -53,7 +53,8 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         currentPlayer = Board.Field.Red;
         board.addFieldLietener(this);
 
-        player = new RandomPlayer(Board.Field.Yellow);
+        //player = new RandomPlayer(Board.Field.Yellow);
+        player = new MinimaxPlayer(Board.Field.Yellow);
 
         setSize();
         showBoard();
@@ -268,13 +269,21 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         }
 
         if (currentPlayer == player.getField()) {
-            player.set(board);
+            Move move = player.set(board);
+            switch (move.type) {
+                case RotateLeft:
+                    board.rotateLeft();
+                    break;
+                case RotateRight:
+                    board.rotateRight();
+                    break;
+                case SetColumn:
+                    board.set(move.column, move.player);
+                    break;
+            }
         } else {
             onClickAble = true;
         }
-
-
-
     }
 }
 

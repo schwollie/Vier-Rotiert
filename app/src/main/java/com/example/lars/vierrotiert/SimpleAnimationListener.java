@@ -17,4 +17,6 @@ public abstract class SimpleAnimationListener implements Animation.AnimationList
     @Override
     public void onAnimationStart(Animation animation) {
     }
+
+
 }

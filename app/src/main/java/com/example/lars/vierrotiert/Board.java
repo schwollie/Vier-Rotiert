@@ -2,6 +2,7 @@ package com.example.lars.vierrotiert;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class Board {
 
@@ -38,24 +39,32 @@ public class Board {
             }
             int col = 0;
             for (char c : line.toCharArray()) {
-                switch (c) {
-                    case 'X':
-                        field[row][col] = Field.Red;
-                        break;
-                    case 'O':
-                        field[row][col] = Field.Yellow;
-                        break;
-                    case '-':
-                        field[row][col] = Field.Empty;
-                        break;
-                    default:
-                        throw new IllegalArgumentException("Invalid character at " + row + "/" + col);
-                }
+                if (c == Field.Red.character)
+                    field[row][col] = Field.Red;
+                else if (c == Field.Yellow.character)
+                    field[row][col] = Field.Yellow;
+                else if (c == Field.Empty.character)
+                    field[row][col] = Field.Empty;
+                else
+                    throw new IllegalArgumentException("Invalid character at " + row + "/" + col);
+
                 col++;
             }
             row++;
         }
 
+        return new
+
+                Board(field, size);
+    }
+
+    public Board clone() {
+        Field[][] field = new Field[size][size];
+        for (int row = 0; row < size; row++) {
+            for (int col = 0; col < size; col++) {
+                field[row][col] = this.field[row][col];
+            }
+        }
         return new Board(field, size);
     }
 
@@ -82,16 +91,14 @@ public class Board {
         throw new IllegalArgumentException(String.format("Column %d completely full", col));
     }
 
-
     boolean isFull() {
-
         int full = 0;
 
-        for(int col = 0;col < size;col++) {
-            for(int row = 0;row < size;row++) {
-                if(field[col][row]!= Field.Empty) {
+        for (int col = 0; col < size; col++) {
+            for (int row = 0; row < size; row++) {
+                if (field[col][row] != Field.Empty) {
                     full++;
-                    if(full==size*size) {
+                    if (full == size * size) {
                         return true;
                     }
 
@@ -99,81 +106,14 @@ public class Board {
             }
         }
 
-
         return false;
     }
 
     Field isWinner() {
-        Accumulator acc = new Accumulator();
-        for (int row = 0; row < size; row++) {
-            acc.reset();
-            for (int col = 0; col < size; col++) {
-                acc.addField(field[row][col]);
-                if (acc.hasWinner()) {
-                    return acc.getWinner();
-                }
-            }
-        }
-
-        //Next
-        for (int col = 0; col < size; col++) {
-            acc.reset();
-            for (int row = 0; row < size; row++) {
-                acc.addField(field[row][col]);
-                if (acc.hasWinner()) {
-                    return acc.getWinner();
-                }
-            }
-        }
-
-        // Fall 1: Spalten von oben nach unten links
-        for (int col = 0; col < size; col++) {
-            acc.reset();
-
-            for (int i = 0; i <= col; i++) {
-                acc.addField(field[i][col - i]);
-                if (acc.hasWinner()) {
-                    return acc.getWinner();
-                }
-            }
-        }
-        // Fall 2: Spalten von unten nach oben rechts
-        for (int col = size - 1; col >= 0; col--) {
-            acc.reset();
-
-            for (int i = 0; i < size - col; i++) {
-                acc.addField(field[size - i - 1][col + i]);
-                if (acc.hasWinner()) {
-                    return acc.getWinner();
-                }
-            }
-        }
-
-        // Fall 3: Spalten von oben nach unten rechts
-        for (int col = 0; col < size; col++) {
-            acc.reset();
-
-            for (int i = 0; i < size - col; i++) {
-                acc.addField(field[i][col + i]);
-                if (acc.hasWinner()) {
-                    return acc.getWinner();
-                }
-            }
-        }
-        // Fall 4: Spalten von unten nach oben links
-        for (int col = size - 1; col >= 0; col--) {
-            acc.reset();
-
-            for (int i = 0; i <= col; i++) {
-                acc.addField(field[size - i - 1][col - i]);
-                if (acc.hasWinner()) {
-                    return acc.getWinner();
-                }
-            }
-        }
-
-
-        return Field.Empty;
+        Winner winner = new Winner();
+        BoardIterator it = new BoardIterator(winner);
+        it.iterate(this);
+        return winner.winner;
     }
 
     Field get(int row, int col) {
@@ -268,13 +208,26 @@ public class Board {
         }
     }
 
-    enum Field {
-        Empty(0, ' '),
-        Red(-1, '0'),
-        Yellow(1, 'X');
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        for (int row = 0; row < size; row++) {
+            for (int col = 0; col < size; col++) {
+                builder.append(field[row][col].character);
+            }
+            builder.append("\n");
+        }
 
+        return builder.toString();
+    }
+
+    enum Field {
+        Empty(0, '-'),
+        Red(-1, 'X'),
+        Yellow(1, 'O');
+
+        final char character;
         private final int value;
-        private final char character;
 
         Field(int value, char c) {
             this.value = value;
@@ -292,38 +245,28 @@ public class Board {
         void onDrop(int col, int startRow, int endRow, Field field);
 
         void onEndDrop();
+
     }
 
-    private class Accumulator {
-        int red = 0;
-        int yellow = 0;
+    private class Winner implements BoardIterator.Listener {
 
-        void addField(Field field) {
-            if (field == Field.Yellow) {
-                yellow++;
-                red = 0;
-            } else if (field == Field.Red) {
-                red++;
-                yellow = 0;
-            } else if (field == Field.Empty) {
-                yellow = 0;
-                red = 0;
+        Field winner = Field.Empty;
+
+        @Override
+        public void countField(Field field) {
+        }
+
+        @Override
+        public void lineFinished(Map<Field, Integer> maxConsecutives) {
+            if (maxConsecutives.get(Field.Red) >= 4) {
+                winner = Field.Red;
+            } else if (maxConsecutives.get(Field.Yellow) >= 4) {
+                winner = Field.Yellow;
             }
         }
 
-        void reset() {
-            red = 0;
-            yellow = 0;
-        }
-
-        boolean hasWinner() {
-            return red >= 4 || yellow >= 4;
-        }
-
-        Field getWinner() {
-            if (red >= 4) return Field.Red;
-            if (yellow >= 4) return Field.Yellow;
-            return Field.Empty;
+        @Override
+        public void boardFinished() {
         }
     }
 }

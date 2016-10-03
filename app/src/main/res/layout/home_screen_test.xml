@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
+
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -13,7 +15,18 @@
         android:layout_height="50dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:background="#d3c3c3">
+        android:background="#e01818">
+
+
+        <com.google.android.gms.ads.AdView
+            android:id="@+id/adView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center_horizontal|top"
+            ads:adSize="BANNER"
+            ads:adUnitId="@string/banner_ad_unit_id"></com.google.android.gms.ads.AdView>
 
     </FrameLayout>
 
@@ -39,13 +52,14 @@
 
     <FrameLayout
         android:id="@+id/frameLayout3"
-        android:layout_width="40dp"
+        android:layout_width="match_parent"
         android:layout_height="330dp"
         android:layout_alignParentEnd="true"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/frameLayout2">
 
         <FrameLayout
+            android:id="@+id/frameleft"
             android:layout_width="50dp"
             android:layout_height="match_parent"
             android:layout_gravity="left|center_vertical"
@@ -60,6 +74,7 @@
         </FrameLayout>
 
         <FrameLayout
+            android:id="@+id/frameright"
             android:layout_width="50dp"
             android:layout_height="match_parent"
             android:layout_gravity="right|center_vertical"
@@ -73,18 +88,78 @@
                 android:background="@drawable/ic_right_arrow" />
         </FrameLayout>
 
-        <FrameLayout
+        <RelativeLayout
+            android:id="@+id/main"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:layout_gravity="center_horizontal|top"
             android:layout_marginLeft="50dp"
             android:layout_marginRight="50dp"
-            android:background="#e71515">
+            android:background="@drawable/layout_bg">
 
-        </FrameLayout>
+            <FrameLayout
+                android:id="@+id/frameLayout4"
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:layout_gravity="center_horizontal|top"
+                android:background="@drawable/layout_bg">
+
+                <RatingBar
+                    android:id="@+id/ratingBar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal|bottom" />
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/frameLayout5"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_below="@+id/frameLayout4"
+                android:layout_centerHorizontal="true">
+
+                <Button
+                    android:id="@+id/button"
+                    android:layout_width="163dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="Player VS Player" />
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/frameLayout6"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_below="@+id/frameLayout5"
+                android:layout_centerHorizontal="true">
+
+                <Button
+                    android:id="@+id/button2"
+                    android:layout_width="163dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="Player VS Computer" />
+            </FrameLayout>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_below="@+id/frameLayout6"
+                android:layout_centerHorizontal="true">
+
+                <Button
+                    android:id="@+id/button4"
+                    android:layout_width="163dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="Multiplayer" />
+            </FrameLayout>
+
+        </RelativeLayout>
     </FrameLayout>
 
     <LinearLayout
+        android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/frameLayout3"
@@ -95,16 +170,34 @@
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="0.50">
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="10dp"
+            android:layout_weight="0.65">
 
+            <SeekBar
+                android:id="@+id/seekBar"
+                android:layout_width="250dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="4dp" />
         </FrameLayout>
 
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_weight="0.50"
-            android:background="#00ffffff"></FrameLayout>
+            android:layout_weight="0.50">
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="match_parent"
+                android:layout_height="39dp"
+                android:layout_gravity="left|center_vertical"
+                android:layout_marginBottom="10dp"
+                android:gravity="center_vertical|center_horizontal"
+                android:text="Computer Level: 1"
+                android:textSize="30dp" />
+        </FrameLayout>
     </LinearLayout>
 
 

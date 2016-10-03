@@ -16,29 +16,24 @@ public class RandomPlayer implements Player {
 
 
     @Override
-    public void set(Board board) {
+    public Move set(Board board) {
         int whatActionx = rnd.nextInt(board.getSize() + 2);
         switch (whatActionx) {
             case 0:
-                board.rotateLeft();
-                break;
+                return Move.rotateLeft(field);
             case 1:
-                board.rotateRight();
-                break;
+                return Move.rotateRight(field);
             default:
                 //Todo: handle full column
                 int column = whatActionx - 2;
                 while (true) {
                     if (board.isFree(column)) {
-                        board.set(column, getField());
-                        break;
+                        return Move.setColumn(field, column);
                     }
 
                     column = rnd.nextInt(5);
                 }
-                break;
         }
-
     }
 
     @Override
