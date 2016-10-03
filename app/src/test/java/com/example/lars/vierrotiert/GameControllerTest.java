@@ -5,19 +5,14 @@ import org.junit.Test;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-/**
- * Created by maus on 02.10.16.
- */
 public class GameControllerTest {
-
-
     @Test
     public void testGame() {
         GameController controller = new GameController(new GameController.Listener() {
             @Override
-            public void gameOver(Board.Field winner) {
+            public void gameOver(Winner winner) {
                 System.out.println("The winner is " + winner);
-                assertThat(winner, is(Board.Field.Yellow));
+                assertThat(winner, is(Winner.Yellow));
             }
         });
 

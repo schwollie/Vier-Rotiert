@@ -109,8 +109,8 @@ public class Board {
         return false;
     }
 
-    Field isWinner() {
-        Winner winner = new Winner();
+    Winner isWinner() {
+        WinnerAggregator winner = new WinnerAggregator();
         BoardIterator it = new BoardIterator(winner);
         it.iterate(this);
         return winner.winner;
@@ -235,6 +235,7 @@ public class Board {
         }
     }
 
+
     interface FieldListener {
         void onRotateLeft();
 
@@ -248,9 +249,11 @@ public class Board {
 
     }
 
-    private class Winner implements BoardIterator.Listener {
+    private class WinnerAggregator implements BoardIterator.Listener {
 
-        Field winner = Field.Empty;
+        Winner winner = Winner.None;
+        int red = 0;
+        int yellow = 0;
 
         @Override
         public void countField(Field field) {
@@ -258,15 +261,29 @@ public class Board {
 
         @Override
         public void lineFinished(Map<Field, Integer> maxConsecutives) {
+
+
             if (maxConsecutives.get(Field.Red) >= 4) {
-                winner = Field.Red;
-            } else if (maxConsecutives.get(Field.Yellow) >= 4) {
-                winner = Field.Yellow;
+                red += 1;
             }
+            if (maxConsecutives.get(Field.Yellow) >= 4) {
+                yellow += 1;
+            }
+
+
         }
 
         @Override
         public void boardFinished() {
+            if (yellow > red) {
+                winner = Winner.Yellow;
+            } else if (red > yellow) {
+                winner = Winner.Red;
+            } else if (red > 0) {
+                winner = Winner.Both;
+            } else {
+                winner = Winner.None;
+            }
         }
     }
 }

@@ -33,8 +33,8 @@ public class GameController {
     }
 
     private void nextTurn() {
-        Board.Field winner = board.isWinner();
-        if (winner != Board.Field.Empty) {
+        Winner winner = board.isWinner();
+        if (winner != Winner.None) {
             gameOver = true;
             listener.gameOver(winner);
             return;
@@ -44,7 +44,7 @@ public class GameController {
 
         if (board.isFull() == true) {
             gameOver = true;
-            listener.gameOver(Board.Field.Empty);
+            listener.gameOver(Winner.None);
             return;
         }
 
@@ -62,6 +62,6 @@ public class GameController {
 
     public interface Listener {
 
-        void gameOver(Board.Field winner);
+        void gameOver(Winner winner);
     }
 }

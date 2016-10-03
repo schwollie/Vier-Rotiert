@@ -28,7 +28,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 
     private static final String TAG = "GameActivity";
     private final List<ImageView> tempViews = new ArrayList<>();
-    private int size = 5;
+    private int size = 6;
     private Board board = new Board(size);
     private GridLayout gridLayout;
     private Board.Field currentPlayer;
@@ -252,11 +252,14 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void nextTurn() {
-        Board.Field winner = board.isWinner();
-        if (winner != Board.Field.Empty) {
+        Winner winner = board.isWinner();
+        if (winner != Winner.None && winner != Winner.Both) {
             Toast.makeText(GameActivity.this, "The winner is " + winner.name(), Toast.LENGTH_SHORT).show();
             onClickAble = false;
             return;
+        } else if (winner == Winner.Both) {
+            Toast.makeText(GameActivity.this, "Both are winner", Toast.LENGTH_SHORT).show();
+            onClickAble = false;
         } else {
             switchPlayer();
         }

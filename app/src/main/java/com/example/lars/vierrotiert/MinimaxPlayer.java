@@ -11,9 +11,10 @@ import java.util.Map;
  */
 public class MinimaxPlayer implements Player {
 
-    private static final int MAX_DEPTH = 5;
+    private static final int MAX_DEPTH = 4;
 
     private Board.Field player;
+    private boolean debug = false;
 
     public MinimaxPlayer(Board.Field player) {
         this.player = player;
@@ -26,6 +27,7 @@ public class MinimaxPlayer implements Player {
 
     @Override
     public Move set(Board board) {
+        System.out.println("Find move for board\n" + board);
         MinimaxMove bestMove = selectMinimax(board, player, 0);
         return bestMove.move;
     }
@@ -40,14 +42,12 @@ public class MinimaxPlayer implements Player {
         Board.Field opponent = getOpponent(player);
         Map<MinimaxMove, MinimaxMove> minimaxMoves = new HashMap<>();
         for (MinimaxMove move : moves) {
-            if (move.board.isWinner() == player) {
+            if (move.board.isWinner().isPlayer(player)) {
                 move.score = 1.;
                 return move;
             }
 
             MinimaxMove bestMove = selectMinimax(move.board, opponent, depth + 1);
-            if (bestMove == null)
-                continue;
             bestMove.score *= -1;
             move.score = bestMove.score;
             minimaxMoves.put(bestMove, move);
@@ -62,9 +62,9 @@ public class MinimaxPlayer implements Player {
 
     private MinimaxMove selectBestMove(Iterable<MinimaxMove> moves) {
         MinimaxMove bestMove = null;
-        double maxScore = -1;
+        Double maxScore = null;
         for (MinimaxMove move : moves) {
-            if (move.score > maxScore) {
+            if (bestMove == null || move.score > maxScore) {
                 maxScore = move.score;
                 bestMove = move;
             }
@@ -75,15 +75,21 @@ public class MinimaxPlayer implements Player {
     private void calculateScores(List<MinimaxMove> moves, Board.Field player) {
         for (MinimaxMove move : moves) {
             move.score = calculateScore(move.board, player);
+            if (debug) System.out.println(move);
         }
     }
 
     private double calculateScore(Board board, Board.Field player) {
-        Board.Field winner = board.isWinner();
-        if (winner == player) {
-            return 1;
-        } else if (winner != Board.Field.Empty) {
-            return -1;
+        Winner winner = board.isWinner();
+        switch (winner) {
+            case None:
+                break;
+            case Red:
+                return player == Board.Field.Red ? 1 : -1;
+            case Yellow:
+                return player == Board.Field.Yellow ? 1 : -1;
+            case Both:
+                return 0;
         }
 
         Counter counter = new Counter();
@@ -131,6 +137,11 @@ public class MinimaxPlayer implements Player {
         Board board;
         Move move;
         Double score;
+
+        @Override
+        public String toString() {
+            return "Move " + move + " has score " + score;
+        }
     }
 
     private class Counter implements BoardIterator.Listener {

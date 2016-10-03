@@ -53,7 +53,7 @@ public class BoardTest {
                 "XOXOX",
         });
 
-        assertEquals(testBoard.isWinner(), Board.Field.Red);
+        assertEquals(testBoard.isWinner(), Winner.Red);
     }
 
     @Test
@@ -66,7 +66,7 @@ public class BoardTest {
                 "-----",
         });
 
-        assertEquals(testBoard.isWinner(), Board.Field.Yellow);
+        assertEquals(testBoard.isWinner(), Winner.Yellow);
     }
 
     @Test
@@ -79,7 +79,7 @@ public class BoardTest {
                 "-O---",
         });
 
-        assertEquals(testBoard.isWinner(), Board.Field.Yellow);
+        assertEquals(testBoard.isWinner(), Winner.Yellow);
     }
 
     @Test
@@ -92,7 +92,7 @@ public class BoardTest {
                 "---O-",
         });
 
-        assertEquals(testBoard.isWinner(), Board.Field.Yellow);
+        assertEquals(testBoard.isWinner(), Winner.Yellow);
     }
 
     @Test
@@ -105,20 +105,24 @@ public class BoardTest {
                 "-----",
         });
 
-        assertEquals(testBoard.isWinner(), Board.Field.Yellow);
+        assertEquals(testBoard.isWinner(), Winner.Yellow);
     }
 
     @Test
     public void testIsWinnerRowCheck() throws Exception {
         Board testBoard = Board.fromCharacters(new String[]{
-                "-----",
-                "-----",
-                "-----",
-                "-----",
-                "OOOO-",
+                "--------",
+                "--------",
+                "----X---",
+                "-----X--",
+                "------X-",
+                "-------X",
+                "----OOOO",
+                "XXXXOOOO"
+
         });
 
-        assertEquals(testBoard.isWinner(), Board.Field.Yellow);
+        assertEquals(testBoard.isWinner(), Winner.Both);
 
         testBoard = Board.fromCharacters(new String[]{
                 "-OOOO",
@@ -128,7 +132,7 @@ public class BoardTest {
                 "-----",
         });
 
-        assertEquals(testBoard.isWinner(), Board.Field.Yellow);
+        assertEquals(testBoard.isWinner(), Winner.Yellow);
     }
 
 

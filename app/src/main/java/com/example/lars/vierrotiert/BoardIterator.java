@@ -103,14 +103,17 @@ public class BoardIterator {
                 yellow = 0;
                 red = 0;
             }
+
+
         }
 
         void reset() {
             red = 0;
             yellow = 0;
             maxConsecutives.clear();
-            maxConsecutives.put(Board.Field.Red, 0);
             maxConsecutives.put(Board.Field.Yellow, 0);
+            maxConsecutives.put(Board.Field.Red, 0);
+
         }
 
         public Map<Board.Field, Integer> getMaxConsecutives() {

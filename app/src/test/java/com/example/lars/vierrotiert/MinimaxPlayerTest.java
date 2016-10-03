@@ -23,6 +23,45 @@ public class MinimaxPlayerTest {
     }
 
     @Test
+    public void testNoMovesAvailable() {
+        Board board = Board.fromCharacters(new String[]{
+                "--------",
+                "--------",
+                "--------",
+                "--------",
+                "-------X",
+                "-------X",
+                "-------X",
+                "X--OO--O",
+        });
+
+        MinimaxPlayer player = new MinimaxPlayer(Board.Field.Yellow);
+        Move move = player.set(board);
+        move.apply(board);
+    }
+
+    @Test
+    public void testAvoidRotation() {
+        Board board = Board.fromCharacters(new String[]{
+                "------",
+                "------",
+                "----X-",
+                "----X-",
+                "XOXOO-",
+                "OXOXO-",
+        });
+
+        MinimaxPlayer player = new MinimaxPlayer(Board.Field.Yellow);
+        Move move = player.set(board);
+        move.apply(board);
+
+        System.out.println(board);
+
+        assertThat(board.isWinner(), is(Winner.None));
+    }
+
+
+    @Test
     public void testSetColumnToWin() {
         Board board = Board.fromCharacters(new String[]{
                 "-----",
@@ -36,7 +75,7 @@ public class MinimaxPlayerTest {
         Move move = player.set(board);
         move.apply(board);
 
-        assertThat(board.isWinner(), is(Board.Field.Yellow));
+        assertThat(board.isWinner(), is(Winner.Yellow));
     }
 
     @Test
@@ -53,7 +92,7 @@ public class MinimaxPlayerTest {
         Move move = player.set(board);
         move.apply(board);
 
-        assertThat(board.isWinner(), is(Board.Field.Yellow));
+        assertThat(board.isWinner(), is(Winner.Yellow));
     }
 
     @Test
@@ -70,6 +109,6 @@ public class MinimaxPlayerTest {
         Move move = player.set(board);
         move.apply(board);
 
-        assertThat(board.isWinner(), not(is(Board.Field.Red)));
+        assertThat(board.isWinner(), not(is(Winner.Red)));
     }
 }
