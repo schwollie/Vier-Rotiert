@@ -2,18 +2,12 @@ package com.example.lars.vierrotiert;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class Board {
-
-    private final int size;
-    private Field[][] field;
+    final int size;
+    Field[][] field;
     private List<FieldListener> fieldListeners = new ArrayList<>();
-
-    private Board(Field[][] field, int size) {
-        this.field = field;
-        this.size = size;
-    }
+    private final BoardAccumulators boardAccumulators;
 
     Board(int size) {
         this.size = size;
@@ -23,6 +17,19 @@ public class Board {
                 field[row][col] = Field.Empty;
             }
         }
+        boardAccumulators = new BoardAccumulators(this);
+    }
+
+    private Board(Field[][] field, int size) {
+        this.field = field;
+        this.size = size;
+        this.boardAccumulators = new BoardAccumulators(this);
+    }
+
+    private Board(Field[][] field, int size, BoardAccumulators iterator) {
+        this.field = field;
+        this.size = size;
+        this.boardAccumulators = iterator;
     }
 
     static Board fromCharacters(String[] map) {
@@ -53,22 +60,18 @@ public class Board {
             row++;
         }
 
-        return new
-
-                Board(field, size);
+        return new Board(field, size);
     }
 
     public Board clone() {
         Field[][] field = new Field[size][size];
         for (int row = 0; row < size; row++) {
-            for (int col = 0; col < size; col++) {
-                field[row][col] = this.field[row][col];
-            }
+            System.arraycopy(this.field[row], 0, field[row], 0, size);
         }
-        return new Board(field, size);
+        return new Board(field, size, boardAccumulators);
     }
 
-    public void addFieldLietener(FieldListener listener) {
+    public void addFieldListener(FieldListener listener) {
         fieldListeners.add(listener);
     }
 
@@ -77,13 +80,12 @@ public class Board {
     }
 
     void set(int col, Field field) {
-
         for (int row = size - 1; row >= 0; row--) {
             if (this.field[row][col] == Field.Empty) {
                 this.field[row][col] = field;
-                notifyFieldListenersOnStart();
+                notifyFieldListenersOnModificationStart();
                 notifyFieldListenersOnDrop(col, 0, row, field);
-                notifyFieldListenersOnEnd();
+                notifyFieldListenersOnModificationEnd();
                 return;
             }
         }
@@ -111,29 +113,33 @@ public class Board {
 
     Winner isWinner() {
         WinnerAggregator winner = new WinnerAggregator();
-        BoardIterator it = new BoardIterator(winner);
-        it.iterate(this);
+        //BoardIterator it = new BoardIterator(winner);
+        //it.iterate(this);
+        boardAccumulators.run(this, winner);
         return winner.winner;
     }
 
-    Field get(int row, int col) {
-        return field[row][col];
-    }
-
     void rotateLeft() {
+        notifyFieldListenersOnModificationStart();
         notifyFieldListenersOnRotateLeft();
 
         Field[][] newField = new Field[size][size];
         for (int row = 0; row < size; row++) {
             for (int col = 0; col < size; col++) {
                 newField[row][col] = field[col][size - 1 - row];
+
             }
         }
 
         field = newField;
+
+        notifyFieldListenersOnRotationEnd();
+
+        applyGravity();
     }
 
     void rotateRight() {
+        notifyFieldListenersOnModificationStart();
         notifyFieldListenersOnRotateRight();
 
         Field[][] newField = new Field[size][size];
@@ -144,12 +150,14 @@ public class Board {
         }
 
         field = newField;
+
+        notifyFieldListenersOnRotationEnd();
+
+        applyGravity();
     }
 
-    void applyGravity() {
+    private void applyGravity() {
         Field[][] newField = new Field[size][size];
-
-        notifyFieldListenersOnStart();
 
         for (int col = 0; col < size; col++) {
             int offset = 0;
@@ -168,14 +176,25 @@ public class Board {
             }
         }
 
-        notifyFieldListenersOnEnd();
-
         field = newField;
+
+        notifyFieldListenersOnModificationEnd();
     }
 
     public boolean isFree(int column) {
-
         return field[0][column] == Field.Empty;
+    }
+
+    private void notifyFieldListenersOnModificationStart() {
+        for (FieldListener listener : fieldListeners) {
+            listener.onModificationStart();
+        }
+    }
+
+    private void notifyFieldListenersOnModificationEnd() {
+        for (FieldListener listener : fieldListeners) {
+            listener.onModificationEnd();
+        }
     }
 
     private void notifyFieldListenersOnRotateLeft() {
@@ -190,21 +209,16 @@ public class Board {
         }
     }
 
-    private void notifyFieldListenersOnStart() {
+    private void notifyFieldListenersOnRotationEnd() {
+        Board clonedBoard = clone();
         for (FieldListener listener : fieldListeners) {
-            listener.onStartDrop();
+            listener.onRotationEnd(clonedBoard);
         }
     }
 
     private void notifyFieldListenersOnDrop(int column, int startRow, int endRow, Field field) {
         for (FieldListener listener : fieldListeners) {
             listener.onDrop(column, startRow, endRow, field);
-        }
-    }
-
-    private void notifyFieldListenersOnEnd() {
-        for (FieldListener listener : fieldListeners) {
-            listener.onEndDrop();
         }
     }
 
@@ -235,22 +249,21 @@ public class Board {
         }
     }
 
-
     interface FieldListener {
+        void onModificationStart();
+
         void onRotateLeft();
 
         void onRotateRight();
 
-        void onStartDrop();
+        void onRotationEnd(Board intermediateState);
 
         void onDrop(int col, int startRow, int endRow, Field field);
 
-        void onEndDrop();
-
+        void onModificationEnd();
     }
 
-    private class WinnerAggregator implements BoardIterator.Listener {
-
+    private static class WinnerAggregator implements BoardIteratorListener {
         Winner winner = Winner.None;
         int red = 0;
         int yellow = 0;
@@ -260,17 +273,13 @@ public class Board {
         }
 
         @Override
-        public void lineFinished(Map<Field, Integer> maxConsecutives) {
-
-
-            if (maxConsecutives.get(Field.Red) >= 4) {
+        public void lineFinished(int redConsecutives, int yellowConsecutives) {
+            if (redConsecutives >= 4) {
                 red += 1;
             }
-            if (maxConsecutives.get(Field.Yellow) >= 4) {
+            if (yellowConsecutives >= 4) {
                 yellow += 1;
             }
-
-
         }
 
         @Override

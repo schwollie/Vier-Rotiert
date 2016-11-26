@@ -26,12 +26,11 @@ public class SquareLinearLayout extends LinearLayout {
         int height = View.MeasureSpec.getSize(heightMeasureSpec);
         int widthDesc = View.MeasureSpec.getMode(widthMeasureSpec);
         int heightDesc = View.MeasureSpec.getMode(heightMeasureSpec);
-        int size = 0;
+        int size;
         if (widthDesc == View.MeasureSpec.UNSPECIFIED
                 && heightDesc == View.MeasureSpec.UNSPECIFIED) {
             size = getContext().getResources().getDimensionPixelSize(R.dimen.default_size); // Use your own default size, for example 125dp
-        } else if ((widthDesc == View.MeasureSpec.UNSPECIFIED || heightDesc == View.MeasureSpec.UNSPECIFIED)
-                && !(widthDesc == View.MeasureSpec.UNSPECIFIED && heightDesc == View.MeasureSpec.UNSPECIFIED)) {
+        } else if ((widthDesc == MeasureSpec.UNSPECIFIED || heightDesc == MeasureSpec.UNSPECIFIED)) {
             //Only one of the dimensions has been specified so we choose the dimension that has a value (in the case of unspecified, the value assigned is 0)
             size = Math.min(width, height);
         } else {

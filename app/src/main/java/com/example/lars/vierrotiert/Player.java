@@ -1,11 +1,13 @@
 package com.example.lars.vierrotiert;
 
+import com.google.common.util.concurrent.ListenableFuture;
+
 /**
  * Created by maus on 04.09.16.
  */
 public interface Player {
 
-    Move set(Board board);
+    ListenableFuture<Move> set(Board board);
 
     Board.Field getField();
 }

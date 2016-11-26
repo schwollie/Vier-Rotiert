@@ -2,7 +2,9 @@ package com.example.lars.vierrotiert;
 
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertThat;
 
 /**
  * Created by Lars on 03.09.2016.
@@ -18,12 +20,11 @@ public class BoardTest {
         testBoard.set(2, Board.Field.Yellow);
 
         testBoard.rotateLeft();
-        testBoard.applyGravity();
 
-        assertEquals(testBoard.get(4, 3), Board.Field.Yellow);
-        assertEquals(testBoard.get(4, 4), Board.Field.Red);
-        assertEquals(testBoard.get(3, 4), Board.Field.Yellow);
-        assertEquals(testBoard.get(2, 4), Board.Field.Red);
+        assertThat(testBoard.field[4][3], is(Board.Field.Yellow));
+        assertThat(testBoard.field[4][4], is(Board.Field.Red));
+        assertThat(testBoard.field[3][4], is(Board.Field.Yellow));
+        assertThat(testBoard.field[2][4], is(Board.Field.Red));
     }
 
     @Test
@@ -35,12 +36,11 @@ public class BoardTest {
         testBoard.set(2, Board.Field.Yellow);
 
         testBoard.rotateRight();
-        testBoard.applyGravity();
 
-        assertEquals(testBoard.get(4, 0), Board.Field.Red);
-        assertEquals(testBoard.get(4, 1), Board.Field.Yellow);
-        assertEquals(testBoard.get(3, 0), Board.Field.Yellow);
-        assertEquals(testBoard.get(2, 0), Board.Field.Red);
+        assertThat(testBoard.field[4][0], is(Board.Field.Red));
+        assertThat(testBoard.field[4][1], is(Board.Field.Yellow));
+        assertThat(testBoard.field[3][0], is(Board.Field.Yellow));
+        assertThat(testBoard.field[2][0], is(Board.Field.Red));
     }
 
     @Test
@@ -53,7 +53,7 @@ public class BoardTest {
                 "XOXOX",
         });
 
-        assertEquals(testBoard.isWinner(), Winner.Red);
+        assertThat(testBoard.isWinner(), is(Winner.Red));
     }
 
     @Test
@@ -66,7 +66,7 @@ public class BoardTest {
                 "-----",
         });
 
-        assertEquals(testBoard.isWinner(), Winner.Yellow);
+        assertThat(testBoard.isWinner(), is(Winner.Yellow));
     }
 
     @Test
@@ -79,7 +79,7 @@ public class BoardTest {
                 "-O---",
         });
 
-        assertEquals(testBoard.isWinner(), Winner.Yellow);
+        assertThat(testBoard.isWinner(), is(Winner.Yellow));
     }
 
     @Test
@@ -92,7 +92,7 @@ public class BoardTest {
                 "---O-",
         });
 
-        assertEquals(testBoard.isWinner(), Winner.Yellow);
+        assertThat(testBoard.isWinner(), is(Winner.Yellow));
     }
 
     @Test
@@ -105,11 +105,11 @@ public class BoardTest {
                 "-----",
         });
 
-        assertEquals(testBoard.isWinner(), Winner.Yellow);
+        assertThat(testBoard.isWinner(), is(Winner.Yellow));
     }
 
     @Test
-    public void testIsWinnerRowCheck() throws Exception {
+    public void testIsWinnerHandlesDrawCheck() throws Exception {
         Board testBoard = Board.fromCharacters(new String[]{
                 "--------",
                 "--------",
@@ -121,10 +121,26 @@ public class BoardTest {
                 "XXXXOOOO"
 
         });
+        assertThat(testBoard.isWinner(), is(Winner.Both));
+    }
 
-        assertEquals(testBoard.isWinner(), Winner.Both);
+    @Test
+    public void testIsWinnerRegressionTest() throws Exception {
+        Board testBoard = Board.fromCharacters(new String[]{
+                "------",
+                "------",
+                "X--X--",
+                "OO-X--",
+                "XXOO--",
+                "OOXO--",
 
-        testBoard = Board.fromCharacters(new String[]{
+        });
+        assertThat(testBoard.isWinner(), is(Winner.None));
+    }
+
+    @Test
+    public void testIsWinnerRowCheck() throws Exception {
+        Board testBoard = Board.fromCharacters(new String[]{
                 "-OOOO",
                 "-----",
                 "-----",
@@ -132,9 +148,21 @@ public class BoardTest {
                 "-----",
         });
 
-        assertEquals(testBoard.isWinner(), Winner.Yellow);
+        assertThat(testBoard.isWinner(), is(Winner.Yellow));
     }
 
+    @Test
+    public void testIsWinnerColCheck() throws Exception {
+        Board testBoard = Board.fromCharacters(new String[]{
+                "X----",
+                "X----",
+                "X----",
+                "X----",
+                "-----",
+        });
+
+        assertThat(testBoard.isWinner(), is(Winner.Red));
+    }
 
     @Test
     public void testIsFull() throws Exception {
@@ -146,7 +174,6 @@ public class BoardTest {
                 "XXXXX",
         });
 
-        assertEquals(testBoard.isFull(), true);
+        assertThat(testBoard.isFull(), is(true));
     }
-
 }

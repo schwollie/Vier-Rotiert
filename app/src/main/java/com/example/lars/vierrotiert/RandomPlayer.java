@@ -1,5 +1,8 @@
 package com.example.lars.vierrotiert;
 
+import com.google.common.util.concurrent.Futures;
+import com.google.common.util.concurrent.ListenableFuture;
+
 import java.util.Random;
 
 /**
@@ -16,19 +19,18 @@ public class RandomPlayer implements Player {
 
 
     @Override
-    public Move set(Board board) {
-        int whatActionx = rnd.nextInt(board.getSize() + 2);
-        switch (whatActionx) {
+    public ListenableFuture<Move> set(Board board) {
+        int whatAction = rnd.nextInt(board.size + 2);
+        switch (whatAction) {
             case 0:
-                return Move.rotateLeft(field);
+                return Futures.immediateFuture(Move.rotateLeft(field));
             case 1:
-                return Move.rotateRight(field);
+                return Futures.immediateFuture(Move.rotateRight(field));
             default:
-                //Todo: handle full column
-                int column = whatActionx - 2;
+                int column = whatAction - 2;
                 while (true) {
                     if (board.isFree(column)) {
-                        return Move.setColumn(field, column);
+                        return Futures.immediateFuture(Move.setColumn(field, column));
                     }
 
                     column = rnd.nextInt(5);

@@ -1,67 +1,98 @@
 package com.example.lars.vierrotiert;
 
+import com.google.common.util.concurrent.FutureCallback;
+import com.google.common.util.concurrent.Futures;
+import com.google.common.util.concurrent.ListenableFuture;
+import com.google.common.util.concurrent.SettableFuture;
+
 /**
  * Created by maus on 02.10.16.
  */
-public class GameController {
+public class GameController implements FutureCallback<Move> {
 
-    private static final int SIZE = 5;
-    private Board board;
+    public Player getCurrentPlayer() {
+        return currentPlayer;
+    }
+
+    public interface Listener {
+
+        void currentPlayerChanged(Player player);
+
+        void gameOver(Winner winner);
+    }
+
+    private final Board board;
     private Listener listener;
+    private boolean autoPlay;
     private Player player1;
     private Player player2;
-    private Player currentPlayer;
-    private boolean gameOver = false;
+    Player currentPlayer;
+    private SettableFuture<Void> gameOver = SettableFuture.create();
 
-    GameController(Listener listener) {
+
+    GameController(Board board, Listener listener, boolean autoPlay) {
+        this.board = board;
         this.listener = listener;
+        this.autoPlay = autoPlay;
     }
 
-    public void playGame(Player player1, Player player2) {
-        this.board = new Board(SIZE);
+    public ListenableFuture<Void> playGame(Player player1, Player player2) {
         this.player1 = player1;
         this.player2 = player2;
-        this.currentPlayer = player1;
+        this.currentPlayer = player2; // player 2 because nextTurn switches player immediately
 
-        while (!gameOver) {
-            System.out.println("Next turn: " + currentPlayer.getField());
-
-            nextTurn();
-
-            System.out.println("New board:\n" + board.toString());
-        }
+        nextTurn();
+        return gameOver;
     }
 
-    private void nextTurn() {
+    public void nextTurn() {
         Winner winner = board.isWinner();
         if (winner != Winner.None) {
-            gameOver = true;
-            listener.gameOver(winner);
+            try {
+                listener.gameOver(winner);
+            } finally {
+                gameOver.set(null);
+            }
             return;
         } else {
             switchPlayer();
         }
 
         if (board.isFull() == true) {
-            gameOver = true;
-            listener.gameOver(Winner.None);
+            try {
+                listener.gameOver(Winner.None);
+            } finally {
+                gameOver.set(null);
+            }
             return;
         }
 
-        Move move = currentPlayer.set(board);
-        move.apply(board);
+        Futures.addCallback(currentPlayer.set(board), this);
     }
 
     private void switchPlayer() {
-        if (currentPlayer == player1)
+        if (currentPlayer == player1) {
             currentPlayer = player2;
-        else
+            listener.currentPlayerChanged(player2);
+        } else {
             currentPlayer = player1;
+            listener.currentPlayerChanged(player1);
+        }
 
     }
 
-    public interface Listener {
+    @Override
+    public void onSuccess(Move move) {
+        System.out.println("Player " + currentPlayer + " moves: " + move);
 
-        void gameOver(Winner winner);
+        move.apply(board);
+        System.out.println("New board: " + board);
+
+        if (autoPlay)
+            nextTurn();
+    }
+
+    @Override
+    public void onFailure(Throwable t) {
     }
 }

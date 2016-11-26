@@ -4,6 +4,15 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Player: Red"
+        android:id="@+id/whichplayer"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="10dp" />
+
     <com.example.lars.vierrotiert.SquareLinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -72,7 +81,7 @@
 
         <LinearLayout
             android:layout_columnWeight="1"
-            android:layout_gravity="center_vertical|end">
+            android:layout_gravity="center">
 
             <ImageButton
                 android:id="@+id/rotate_left"
@@ -89,7 +98,7 @@
 
         <LinearLayout
             android:layout_columnWeight="1"
-            android:layout_gravity="center_vertical|start">
+            android:layout_gravity="center">
 
             <ImageButton
                 android:id="@+id/rotate_right"

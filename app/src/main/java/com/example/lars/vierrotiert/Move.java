@@ -30,11 +30,9 @@ public class Move {
         switch (type) {
             case RotateLeft:
                 board.rotateLeft();
-                board.applyGravity();
                 break;
             case RotateRight:
                 board.rotateRight();
-                board.applyGravity();
                 break;
             case SetColumn:
                 board.set(column, player);
