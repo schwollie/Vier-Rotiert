@@ -1,217 +1,272 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:ads="http://schemas.android.com/apk/res-auto"
 
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:gravity="top"
     android:orientation="vertical">
 
 
-
-
-    <FrameLayout
-        android:id="@+id/frameLayout"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:background="#e01818">
-
-
-        <com.google.android.gms.ads.AdView
-            android:id="@+id/adView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:layout_gravity="center_horizontal|top"
-            ads:adSize="BANNER"
-            ads:adUnitId="@string/banner_ad_unit_id"></com.google.android.gms.ads.AdView>
-
-    </FrameLayout>
-
-    <FrameLayout
-        android:id="@+id/frameLayout2"
-        android:layout_width="match_parent"
-        android:layout_height="75dp"
-        android:layout_below="@+id/frameLayout"
-        android:layout_centerHorizontal="true">
-
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_gravity="left|center_vertical"
-            android:background="#00ffffff"
-            android:paddingTop="2dp"
-            android:text="Vier Rotiert"
-            android:textAlignment="center"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textSize="55dp" />
-    </FrameLayout>
-
-    <FrameLayout
-        android:id="@+id/frameLayout3"
-        android:layout_width="match_parent"
-        android:layout_height="330dp"
+    <ImageButton
+        android:id="@+id/imageButton"
+        android:layout_width="wrap_content"
+        android:layout_height="190dp"
         android:layout_alignParentEnd="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/frameLayout2">
+        android:background="@drawable/yellowtogreen" />
 
-        <FrameLayout
-            android:id="@+id/frameleft"
-            android:layout_width="50dp"
-            android:layout_height="match_parent"
-            android:layout_gravity="left|center_vertical"
-            android:background="#00ffffff">
-
-            <ImageButton
-                android:id="@+id/left_button"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_gravity="center"
-                android:background="@drawable/ic_left_arrow" />
-        </FrameLayout>
-
-        <FrameLayout
-            android:id="@+id/frameright"
-            android:layout_width="50dp"
-            android:layout_height="match_parent"
-            android:layout_gravity="right|center_vertical"
-            android:background="#00ffffff">
-
-            <ImageButton
-                android:id="@+id/right_button"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_gravity="center"
-                android:background="@drawable/ic_right_arrow" />
-        </FrameLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/imageButton"
+        android:layout_centerHorizontal="true"
+        android:background="#fbfbfb">
 
         <RelativeLayout
-            android:id="@+id/main"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_gravity="center_horizontal|top"
-            android:layout_marginLeft="50dp"
-            android:layout_marginRight="50dp"
-            android:background="@drawable/layout_bg">
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:background="#a0ffffff">
+
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="#fdfcfc"
+                android:src="@drawable/vierrotiert" />
 
             <FrameLayout
-                android:id="@+id/frameLayout4"
+                android:id="@+id/frameLayout"
                 android:layout_width="match_parent"
-                android:layout_height="150dp"
-                android:layout_gravity="center_horizontal|top"
-                android:background="@drawable/layout_bg">
+                android:layout_height="54dp"
+                android:layout_gravity="left|top">
 
-                <RatingBar
-                    android:id="@+id/ratingBar"
+                <TextView
+                    android:id="@+id/textView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal|bottom" />
+                    android:layout_gravity="left|center_vertical"
+                    android:text="Settings:"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textSize="33dp" />
             </FrameLayout>
 
             <FrameLayout
-                android:id="@+id/frameLayout5"
-                android:layout_width="match_parent"
+                android:id="@+id/frameLayout2"
+                android:layout_width="200dp"
+                android:layout_height="3dp"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/frameLayout"
+                android:background="#000000"></FrameLayout>
+
+            <Button
+                android:id="@+id/button"
+                android:layout_width="wrap_content"
                 android:layout_height="60dp"
-                android:layout_below="@+id/frameLayout4"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/frameLayout2"
+                android:background="#00ffffff"
+                android:text="PLAYER VS PLAYER"
+                android:textSize="33dp" />
+
+            <FrameLayout
+                android:id="@+id/frameLayout3"
+                android:layout_width="200dp"
+                android:layout_height="3dp"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/button"
+                android:background="#000000"
+                android:longClickable="false"></FrameLayout>
+
+            <RelativeLayout
+                android:id="@+id/relativeLayout"
+                android:layout_width="match_parent"
+                android:layout_height="143dp"
+                android:layout_below="@+id/frameLayout3"
                 android:layout_centerHorizontal="true">
 
-                <Button
-                    android:id="@+id/button"
-                    android:layout_width="163dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="Player VS Player" />
-            </FrameLayout>
+                <FrameLayout
+                    android:id="@+id/frameLayout4"
+                    android:layout_width="match_parent"
+                    android:layout_height="70dp"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true">
+
+                    <TextView
+                        android:id="@+id/textView2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="left|top"
+                        android:text="Difficulty:"
+                        android:textColor="#000000"
+                        android:textSize="25dp" />
+
+                    <TextView
+                        android:id="@+id/textView3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal|top"
+                        android:text="7/8"
+                        android:textColor="#000000"
+                        android:textSize="25dp" />
+
+                    <TextView
+                        android:id="@+id/textView4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="right|top"
+                        android:text="(HARD)"
+                        android:textColor="#000000"
+                        android:textSize="25dp" />
+
+                    <SeekBar
+                        android:id="@+id/seekBar"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal|bottom"
+                        android:layout_marginBottom="10dp"
+                        android:max="6" />
+                </FrameLayout>
+
+                <FrameLayout
+                    android:id="@+id/frameLayout5"
+                    android:layout_width="200dp"
+                    android:layout_height="3dp"
+                    android:layout_alignParentStart="true"
+                    android:layout_below="@+id/frameLayout4"
+                    android:background="#000000"></FrameLayout>
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentStart="true"
+                    android:layout_below="@+id/frameLayout5">
+
+                    <TextView
+                        android:id="@+id/textView5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="left|top"
+                        android:text="Board size:"
+                        android:textColor="#000000"
+                        android:textSize="25dp" />
+
+                    <TextView
+                        android:id="@+id/textView6"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal|top"
+                        android:text="5x5"
+                        android:textColor="#000000"
+                        android:textSize="25dp" />
+
+                    <TextView
+                        android:id="@+id/textView7"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="right|top"
+                        android:text="(Normal)"
+                        android:textColor="#000000"
+                        android:textSize="25dp" />
+
+                    <SeekBar
+                        android:id="@+id/seekBar2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal|bottom"
+                        android:layout_marginBottom="10dp"
+                        android:max="2" />
+                </FrameLayout>
+            </RelativeLayout>
 
             <FrameLayout
                 android:id="@+id/frameLayout6"
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:layout_below="@+id/frameLayout5"
-                android:layout_centerHorizontal="true">
-
-                <Button
-                    android:id="@+id/button4"
-                    android:layout_width="163dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="Multiplayer" />
-            </FrameLayout>
+                android:layout_height="15dp"
+                android:layout_below="@+id/relativeLayout"
+                android:layout_centerHorizontal="true"
+                android:background="#000000"></FrameLayout>
 
             <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
+                android:layout_height="match_parent"
                 android:layout_below="@+id/frameLayout6"
                 android:layout_centerHorizontal="true">
 
-                <ProgressBar
-                    style="?android:attr/progressBarStyleHorizontal"
-                    android:layout_width="183dp"
-                    android:layout_height="20dp"
-                    android:id="@+id/progressBar"
-                    android:layout_gravity="right|center_vertical"
-                    android:indeterminate="false"
-                    android:layout_marginRight="10dp" />
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="95dp"
+                    android:layout_gravity="left|top">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="XP: 11"
-                    android:id="@+id/Xp"
+                    <Button
+                        android:id="@+id/button2"
+                        style="?android:attr/buttonStyleSmall"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:background="#00ffffff"
+                        android:text="MULTYPLAYER"
+                        android:textSize="34dp" />
+                </FrameLayout>
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="95dp"
+                    android:layout_gravity="left|bottom">
+
+                    <TextView
+                        android:id="@+id/textView8"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="left|center_vertical"
+                        android:text="Info:"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:textSize="44dp" />
+
+                    <TextView
+                        android:id="@+id/textView9"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal|top"
+                        android:layout_marginTop="10dp"
+                        android:text="XP:"
+                        android:textColor="#000000"
+                        android:textSize="25dp" />
+
+                    <TextView
+                        android:id="@+id/textView10"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="right|top"
+                        android:layout_marginRight="40dp"
+                        android:layout_marginTop="10dp"
+                        android:text="12000"
+                        android:textColor="#000000"
+                        android:textSize="25dp" />
+
+                    <TextView
+                        android:id="@+id/textView11"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="right|bottom"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginRight="40dp"
+                        android:text="Beginner"
+                        android:textColor="#000000"
+                        android:textSize="25dp" />
+                </FrameLayout>
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="5dp"
                     android:layout_gravity="left|center_vertical"
-                    android:textSize="25dp"
-                    android:layout_margin="10dp" />
+                    android:background="#000000"></FrameLayout>
             </FrameLayout>
 
         </RelativeLayout>
-    </FrameLayout>
-
-    <LinearLayout
-        android:id="@+id/linearLayout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/frameLayout3"
-        android:layout_centerHorizontal="true"
-        android:orientation="vertical"
-        android:weightSum="1">
-
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="10dp"
-            android:layout_weight="0.65">
-
-
-            <SeekBar
-                android:id="@+id/seekBar"
-                android:layout_width="250dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:max="6"
-                android:layout_marginTop="4dp" />
-        </FrameLayout>
-
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_weight="0.50">
-
-            <TextView
-                android:id="@+id/textView2"
-                android:layout_width="match_parent"
-                android:layout_height="39dp"
-                android:layout_gravity="left|center_vertical"
-                android:layout_marginBottom="10dp"
-                android:gravity="center_vertical|center_horizontal"
-                android:text="Computer Level: 1"
-                android:textSize="30dp" />
-        </FrameLayout>
-    </LinearLayout>
-
+    </RelativeLayout>
 
 </RelativeLayout>

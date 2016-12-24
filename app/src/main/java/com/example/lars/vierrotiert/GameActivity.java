@@ -1,36 +1,13 @@
 package com.example.lars.vierrotiert;
 
-import android.Manifest;
-import android.animation.Animator;
-import android.animation.AnimatorSet;
-import android.animation.ObjectAnimator;
-import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-import android.view.Display;
 import android.view.View;
-import android.view.WindowManager;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.FrameLayout;
 import android.widget.GridLayout;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import android.content.SharedPreferences;
 
 
 public class GameActivity extends AppCompatActivity implements VisualBoard.Listener, GameController.Listener {
@@ -49,6 +26,9 @@ public class GameActivity extends AppCompatActivity implements VisualBoard.Liste
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.field);
+        Intent intent = this.getIntent();
+        int board_size = intent.getIntExtra("board_size", 5);
+        size = board_size;
 
         board = new Board(size);
 
@@ -58,7 +38,7 @@ public class GameActivity extends AppCompatActivity implements VisualBoard.Liste
 
         playerRed = new HumanPlayer(Board.Field.Red, board, visualBoard);
 
-        Intent intent = this.getIntent();
+
         boolean isBtnTextPlayerVsPlayer = intent.getBooleanExtra("playerVsPlayer", true);
 
         if (isBtnTextPlayerVsPlayer == true) {

@@ -4,7 +4,6 @@ import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertThat;
 
 /**
  * Created by Lars on 03.09.2016.
@@ -175,5 +174,16 @@ public class BoardTest {
         });
 
         assertThat(testBoard.isFull(), is(true));
+    }
+
+    public void testScore() {
+        Board testBoard = Board.fromCharacters(new String [] {
+                "------",
+                        "O-----",
+                        "O-----",
+                        "OX----",
+                "XXX---",
+                        "OXOXXO",
+        });
     }
 }

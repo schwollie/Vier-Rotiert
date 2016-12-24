@@ -2,8 +2,6 @@ package com.example.lars.vierrotiert;
 
 import org.junit.Test;
 
-import java.util.concurrent.ExecutionException;
-
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.assertThat;
@@ -219,7 +217,7 @@ public class MinimaxPlayerTest {
                 "------",
                 "------",
                 "------",
-                "O-----",
+                "OO----",
                 "XXX---",
                 "OXOXXO"
         });
