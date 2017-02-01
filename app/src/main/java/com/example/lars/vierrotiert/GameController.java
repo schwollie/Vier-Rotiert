@@ -10,30 +10,21 @@ import com.google.common.util.concurrent.SettableFuture;
  */
 public class GameController implements FutureCallback<Move> {
 
-    public Player getCurrentPlayer() {
-        return currentPlayer;
-    }
-
-    public interface Listener {
-
-        void currentPlayerChanged(Player player);
-
-        void gameOver(Winner winner);
-    }
-
     private final Board board;
+    Player currentPlayer;
     private Listener listener;
     private boolean autoPlay;
     private Player player1;
     private Player player2;
-    Player currentPlayer;
     private SettableFuture<Void> gameOver = SettableFuture.create();
-
-
     GameController(Board board, Listener listener, boolean autoPlay) {
         this.board = board;
         this.listener = listener;
         this.autoPlay = autoPlay;
+    }
+
+    public Player getCurrentPlayer() {
+        return currentPlayer;
     }
 
     public ListenableFuture<Void> playGame(Player player1, Player player2) {
@@ -68,6 +59,7 @@ public class GameController implements FutureCallback<Move> {
         }
 
         Futures.addCallback(currentPlayer.set(board), this);
+
     }
 
     private void switchPlayer() {
@@ -94,5 +86,12 @@ public class GameController implements FutureCallback<Move> {
 
     @Override
     public void onFailure(Throwable t) {
+    }
+
+    public interface Listener {
+
+        void currentPlayerChanged(Player player);
+
+        void gameOver(Winner winner);
     }
 }

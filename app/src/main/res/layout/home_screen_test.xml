@@ -16,6 +16,7 @@
         android:background="@drawable/yellowtogreen" />
 
     <RelativeLayout
+        android:id="@+id/relativeLayout2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/imageButton"
@@ -34,13 +35,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:background="#fdfcfc"
-                android:src="@drawable/vierrotiert" />
+                android:background="#fdfcfc" />
 
             <FrameLayout
                 android:id="@+id/frameLayout"
                 android:layout_width="match_parent"
                 android:layout_height="54dp"
+                android:layout_below="@+id/imageView"
                 android:layout_gravity="left|top">
 
                 <TextView
@@ -48,6 +49,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="left|center_vertical"
+                    android:layout_marginLeft="15dp"
                     android:text="Settings:"
                     android:textAppearance="?android:attr/textAppearanceLarge"
                     android:textSize="33dp" />
@@ -100,6 +102,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="left|top"
+                        android:layout_marginLeft="15dp"
                         android:text="Difficulty:"
                         android:textColor="#000000"
                         android:textSize="25dp" />
@@ -109,7 +112,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal|top"
-                        android:text="7/8"
+                        android:text="2/5"
                         android:textColor="#000000"
                         android:textSize="25dp" />
 
@@ -118,7 +121,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="right|top"
-                        android:text="(HARD)"
+                        android:layout_marginRight="15dp"
+                        android:text="(EASY)"
                         android:textColor="#000000"
                         android:textSize="25dp" />
 
@@ -128,7 +132,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal|bottom"
                         android:layout_marginBottom="10dp"
-                        android:max="6" />
+                        android:max="50" />
                 </FrameLayout>
 
                 <FrameLayout
@@ -150,6 +154,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="left|top"
+                        android:layout_marginLeft="15dp"
                         android:text="Board size:"
                         android:textColor="#000000"
                         android:textSize="25dp" />
@@ -168,6 +173,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="right|top"
+                        android:layout_marginRight="15dp"
                         android:text="(Normal)"
                         android:textColor="#000000"
                         android:textSize="25dp" />
@@ -178,14 +184,14 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal|bottom"
                         android:layout_marginBottom="10dp"
-                        android:max="2" />
+                        android:max="40" />
                 </FrameLayout>
             </RelativeLayout>
 
             <FrameLayout
                 android:id="@+id/frameLayout6"
                 android:layout_width="match_parent"
-                android:layout_height="15dp"
+                android:layout_height="3dp"
                 android:layout_below="@+id/relativeLayout"
                 android:layout_centerHorizontal="true"
                 android:background="#000000"></FrameLayout>
@@ -208,7 +214,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:background="#00ffffff"
-                        android:text="MULTYPLAYER"
+                        android:text="MULTIPLAYER"
                         android:textSize="34dp" />
                 </FrameLayout>
 
@@ -222,6 +228,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="left|center_vertical"
+                        android:layout_marginLeft="15dp"
                         android:text="Info:"
                         android:textAppearance="?android:attr/textAppearanceLarge"
                         android:textSize="44dp" />
@@ -261,12 +268,20 @@
 
                 <FrameLayout
                     android:layout_width="match_parent"
-                    android:layout_height="5dp"
+                    android:layout_height="3dp"
                     android:layout_gravity="left|center_vertical"
                     android:background="#000000"></FrameLayout>
             </FrameLayout>
 
         </RelativeLayout>
     </RelativeLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:layout_above="@+id/relativeLayout2"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/imageButton"
+        android:background="#000000"></FrameLayout>
 
 </RelativeLayout>

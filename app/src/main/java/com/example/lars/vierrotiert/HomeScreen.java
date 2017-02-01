@@ -8,6 +8,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -23,28 +24,33 @@ public class HomeScreen extends GameActivity implements View.OnClickListener {
             new SeekBar.OnSeekBarChangeListener() {
                 @Override
                 public void onProgressChanged(SeekBar seekBar, int progress, boolean b) {
-                    progress = progress + 1;
+                    progress = progress + 10;
+                    if (progress > 50) {
+                        progress = 50;
+                    }
                     //editor.putInt("level", progress);
                     TextView txt = (TextView) findViewById(R.id.textView3);
-                    txt.setText(progress + "/7");
+                    txt.setText(progress / 10 + "/5");
                     TextView txt2 = (TextView) findViewById(R.id.textView4);
+                    level = progress / 10;
+                    progress = progress / 10;
                     if (progress == 1) {
-                        txt2.setText("(You Winn)");
-                    } else if (progress == 2) {
                         txt2.setText("(VERY EASY)");
-                    } else if (progress == 3) {
+                    } else if (progress == 2) {
                         txt2.setText("(EASY)");
+                    } else if (progress == 3) {
+                        txt2.setText("(NORMAL)");
                     } else if (progress == 4) {
-                        txt2.setText("(EASY NORMAL)");
+                        txt2.setText("(HARD)");
                     } else if (progress == 5) {
-                        txt2.setText("(HARD NORMAL)");
+                        txt2.setText("(WIZARD)");
                     } else if (progress == 6) {
                         txt2.setText("(HARD)");
                     } else if (progress == 7) {
-                        txt2.setText("(VERY HARD)");
+                        txt2.setText("(WIZARD)");
                     }
 
-                    level = progress;
+
                     //editor.commit();
 
                 }
@@ -63,24 +69,32 @@ public class HomeScreen extends GameActivity implements View.OnClickListener {
             new SeekBar.OnSeekBarChangeListener() {
                 @Override
                 public void onProgressChanged(SeekBar seekBar2, int progress, boolean b) {
-                    progress = progress + 4;
                     //editor.putInt("board-size", progress);
 
-                    board_size = progress;
+
                     //editor.commit(board_size);
 
-                    TextView txt = (TextView) findViewById(R.id.textView6);
-                    txt.setText(progress + "x" + progress);
 
                     TextView txt2 = (TextView) findViewById(R.id.textView7);
-
-                    if (progress == 4) {
-                        txt2.setText("(SMALL)");
-                    } else if (progress == 5) {
-                        txt2.setText("(NORMAL)");
-                    } else if (progress == 6) {
-                        txt2.setText("(XL)");
+                    if (progress > 30) {
+                        progress = 30;
                     }
+                    int x = progress / 10 + 4;
+                    board_size = x;
+
+                    TextView txt = (TextView) findViewById(R.id.textView6);
+                    txt.setText(x + "x" + x);
+
+                    if (progress >= 30) {
+                        txt2.setText("(XXL)");
+                    } else if (progress >= 20) {
+                        txt2.setText("(XL)");
+                    } else if (progress >= 10) {
+                        txt2.setText("(NORMAL)");
+                    } else if (progress >= 1) {
+                        txt2.setText("(SMALL)");
+                    }
+
 
                 }
 
@@ -106,24 +120,9 @@ public class HomeScreen extends GameActivity implements View.OnClickListener {
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);*/
 
-
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
-        /*
-      ATTENTION: This was auto-generated to implement the App Indexing API.
-      See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
         GoogleApiClient client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
-
-        //   sharedPreferences = getSharedPreferences("preference", Context.MODE_PRIVATE);
-        //  editor = sharedPreferences.edit();
-//        editor.putInt("level", 1);
-//        editor.putInt("XP",xp);
-//        editor.putBoolean("permission-XP", false);
-//        editor.commit();
-
-        //editor.putInt("XP", sharedPreferences.getInt("XP",0)+1);
-        //editor.commit();
 
         ImageButton imgbtn = (ImageButton) findViewById(R.id.imageButton);
         imgbtn.setOnClickListener(this);
@@ -132,13 +131,16 @@ public class HomeScreen extends GameActivity implements View.OnClickListener {
         Button btn1 = (Button) findViewById(R.id.button);
         btn1.setOnClickListener(this);
 
+        Button btn2 = (Button) findViewById(R.id.button2);
+        btn2.setOnClickListener(this);
+
 
         SeekBar seekBar = (SeekBar) findViewById(R.id.seekBar);
-        seekBar.setProgress(level);
+        seekBar.setProgress(10);
         seekBar.setOnSeekBarChangeListener(customSeekBarListener);
 
         SeekBar seekBar2 = (SeekBar) findViewById(R.id.seekBar2);
-        seekBar2.setProgress(board_size);
+        seekBar2.setProgress(10);
         seekBar2.setOnSeekBarChangeListener(customSeekBarListener2);
 
         ImageView img = (ImageView) findViewById(R.id.imageView);
@@ -161,7 +163,21 @@ public class HomeScreen extends GameActivity implements View.OnClickListener {
             }
         }
 
+        if (view.getId() == R.id.button2) {
+            Toast.makeText(getBaseContext(), "Coming Soon!",
+                    Toast.LENGTH_LONG).show();
+        }
+
         if (view.getId() == R.id.imageButton) {
+            if (isBtnTextPlayerVsPlayer == false && board_size > 6 && level > 4) {
+                Toast.makeText(getBaseContext(), "So much math! Coming Soon!!",
+                        Toast.LENGTH_LONG).show();
+                return;
+            }
+            if (isBtnTextPlayerVsPlayer == false && board_size > 5 && level > 3) {
+                Toast.makeText(getBaseContext(), "Maybe it's too much for your mobile phone! Coming Soon!!",
+                        Toast.LENGTH_LONG).show();
+            }
             Intent intent = new Intent(this, GameActivity.class);
             intent.putExtra("playerVsPlayer", isBtnTextPlayerVsPlayer);
             intent.putExtra("level", level);
@@ -169,6 +185,4 @@ public class HomeScreen extends GameActivity implements View.OnClickListener {
             startActivity(intent);
         }
     }
-
-
 }

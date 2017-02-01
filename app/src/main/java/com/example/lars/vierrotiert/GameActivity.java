@@ -15,7 +15,7 @@ public class GameActivity extends AppCompatActivity implements VisualBoard.Liste
 //    private SharedPreferences sharedPreferences;
 //    private SharedPreferences.Editor editor;
 
-    private int size = 6;
+    private int size = 5;
     private Board board = new Board(size);
     private VisualBoard visualBoard;
     private Player playerRed;
